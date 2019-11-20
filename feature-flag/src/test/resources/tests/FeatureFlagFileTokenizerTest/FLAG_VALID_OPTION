@@ -1,0 +1,4 @@
+OPTION FLAG_1 = VALUE             # expected option: "OPTION",           name: "FLAG_1",  value: "VALUE"
+ OPTION  FLAG_2 = VALUE           # expected option: "OPTION",           name: "FLAG_2",  value: "VALUE"
+OPTION1 OPTION2 FLAG_3 = VALUE    # expected option: "OPTION1 OPTION2",  name: "FLAG_3",  value: "VALUE"
+ OPTION1  OPTION2  FLAG_4 = VALUE # expected option: "OPTION1  OPTION2", name: "FLAG_4",  value: "VALUE"

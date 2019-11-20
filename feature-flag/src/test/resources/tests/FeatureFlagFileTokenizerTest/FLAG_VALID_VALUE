@@ -1,0 +1,5 @@
+FLAG_1 =VALUE        # expected option: "", name: "FLAG_1", value: "VALUE"
+FLAG_2 =  VALUE      # expected option: "", name: "FLAG_2", value: "VALUE"
+FLAG_3 = VALUE VALUE # expected option: "", name: "FLAG_3", value: "VALUE VALUE"
+FLAG_4 = VALUE#VALUE # expected option: "", name: "FLAG_4", value: "VALUE"
+FLAG_5 = VALUE=VALUE # expected option: "", name: "FLAG_5", value: "VALUE=VALUE"
