@@ -12,6 +12,8 @@ You can specify which feature is enabled by [build variant](https://developer.an
 
 ### Add library dependencies
 
+**This plugin is under the review for [Gradle Plugin Portal](https://plugins.gradle.org/). The following instruction will be available once the plugin is published.**
+
 The plugin is available on [Gradle Plugin Portal](https://plugins.gradle.org/). Add configurations in the `build.gradle.kts` file as follows.
 
 ```build.gradle.kts
@@ -74,7 +76,7 @@ An example is as follows.
 ```FEATURE_FLAG
 # Simple property
 FLAG_1 = DEBUG              # Enabled when build in `DEBUG` phase.
-FLAG_2 = 1.2.0~             # Enabled when module version is higher than `1.2.0`.
+FLAG_2 = 1.2.0~             # Enabled when module version is `1.2.0` or later.
 FLAG_3 = @user              # Enabled if the username is `user`.
 FLAG_4 = submodule:FLAG_A   # Delegates flag enability to `FLAG_A` in module `submodule`.
 
