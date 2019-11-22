@@ -12,6 +12,8 @@ You can specify which feature is enabled by [build variant](https://developer.an
 
 ### Add library dependencies
 
+**This plugin is under the review for [Gradle Plugin Portal](https://plugins.gradle.org/). The following instruction will be available once the plugin is published.**
+
 The plugin is available on [Gradle Plugin Portal](https://plugins.gradle.org/). Add configurations in the `build.gradle.kts` file as follows.
 
 ```build.gradle.kts
