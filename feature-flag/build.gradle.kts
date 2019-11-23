@@ -10,6 +10,7 @@ plugins {
 }
 
 version = ModuleConfig.version
+group = ModuleConfig.groupId
 
 gradlePlugin {
     plugins {
