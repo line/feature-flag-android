@@ -1,5 +1,7 @@
 # feature-flag-android
 
+[![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/com/linecorp/android/feature-flag/com.linecorp.android.feature-flag.gradle.plugin/maven-metadata.xml.svg?colorB=007ec6&label=Gradle%20Plugin%20Portal)](https://plugins.gradle.org/plugin/com.linecorp.android.feature-flag)
+
 A Gradle plugin to achieve feature flag based development for Android applications.
 
 ## Overview
