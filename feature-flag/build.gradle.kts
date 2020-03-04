@@ -30,7 +30,6 @@ ktlint {
 }
 
 tasks.withType(Test::class.java) {
-    @Suppress("UnstableApiUsage")
     useJUnitPlatform {
         includeEngines("spek2")
     }
