@@ -16,14 +16,14 @@
 
 package com.linecorp.android.featureflag.util
 
-import com.android.build.gradle.AndroidConfig
+import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.api.BaseVariant
 import com.linecorp.android.featureflag.model.BuildVariant
 import org.gradle.api.Project
 import java.io.File
 
-internal val Project.android: AndroidConfig
-    get() = project.extensions.getByName("android") as AndroidConfig
+internal val Project.android: BaseExtension
+    get() = project.extensions.getByName("android") as BaseExtension
 
 internal fun BaseVariant.getProductFlavorSet(): Set<BuildVariant.Element.Flavor> =
     productFlavors.map { BuildVariant.Element.Flavor(it.name) }.toSet()

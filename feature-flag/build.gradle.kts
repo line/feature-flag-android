@@ -1,12 +1,13 @@
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
-    kotlin("jvm")
+    kotlin("jvm") version Dependencies.Version.kotlin
     `kotlin-dsl`
     id("com.gradle.plugin-publish") version Dependencies.Version.gradlePublishPlugin
     `java-gradle-plugin`
-    id("org.jlleitschuh.gradle.ktlint")
-    id("com.github.ben-manes.versions")
+    id("org.jlleitschuh.gradle.ktlint") version Dependencies.Version.ktlintGradlePlugin
+    id("com.github.ben-manes.versions") version Dependencies.Version.gradleVersionsPlugin
 }
 
 version = ModuleConfig.version
@@ -22,14 +23,37 @@ gradlePlugin {
 }
 
 ktlint {
-    reporters.set(setOf(ReporterType.PLAIN, ReporterType.CHECKSTYLE))
+    reporters {
+        reporter(ReporterType.PLAIN)
+        reporter(ReporterType.CHECKSTYLE)
+    }
 }
 
 tasks.withType(Test::class.java) {
-    @Suppress("UnstableApiUsage")
     useJUnitPlatform {
         includeEngines("spek2")
     }
+}
+
+fun isStable(version: String): Boolean {
+    val hasStableKeyword = setOf("RELEASE", "FINAL", "GA").any {
+        version.contains(version, ignoreCase = true)
+    }
+    val regex = """^[0-9,.v-]+(-r)?$""".toRegex()
+    return hasStableKeyword || regex.matches(version)
+}
+
+tasks.withType<DependencyUpdatesTask> {
+    resolutionStrategy {
+        componentSelection {
+            all {
+                if (!isStable(candidate.version) && isStable(currentVersion)) {
+                    reject("Release candidate")
+                }
+            }
+        }
+    }
+    checkForGradleUpdate = true
 }
 
 dependencies {
