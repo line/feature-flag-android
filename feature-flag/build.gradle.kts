@@ -23,7 +23,10 @@ gradlePlugin {
 }
 
 ktlint {
-    reporters.set(setOf(ReporterType.PLAIN, ReporterType.CHECKSTYLE))
+    reporters {
+        reporter(ReporterType.PLAIN)
+        reporter(ReporterType.CHECKSTYLE)
+    }
 }
 
 tasks.withType(Test::class.java) {
