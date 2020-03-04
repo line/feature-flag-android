@@ -16,8 +16,8 @@
 
 package com.linecorp.android.featureflag
 
-import com.android.build.gradle.AndroidConfig
 import com.android.build.gradle.AppExtension
+import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.FeatureExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.api.BaseVariant
@@ -55,7 +55,7 @@ class FeatureFlagPlugin : Plugin<Project> {
     private fun Project.installFeatureFlagGenerationTask(
         extension: FeatureFlagExtension
     ) {
-        val appExtension = project.android as? AndroidConfig ?: throw RuntimeException(
+        val appExtension = project.android as? BaseExtension ?: throw RuntimeException(
             "`feature-flag` plugin requires any of android plugin"
         )
 
@@ -71,7 +71,7 @@ class FeatureFlagPlugin : Plugin<Project> {
         }
     }
 
-    private fun AndroidConfig.getVariants(): DomainObjectSet<out BaseVariant>? = when (this) {
+    private fun BaseExtension.getVariants(): DomainObjectSet<out BaseVariant>? = when (this) {
         is AppExtension -> applicationVariants
         is FeatureExtension -> featureVariants
         is LibraryExtension -> libraryVariants
