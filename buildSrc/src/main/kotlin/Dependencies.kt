@@ -1,10 +1,6 @@
 object Dependencies {
     object GradlePlugin {
-        const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Version.kotlin}"
         const val android = "com.android.tools.build:gradle:${Version.androidPlugin}"
-        const val ktlint = "org.jlleitschuh.gradle:ktlint-gradle:${Version.ktlintGradle}"
-        const val gradleVersions =
-            "com.github.ben-manes:gradle-versions-plugin:${Version.gradleVersionsPlugin}"
     }
 
     object Library {
@@ -28,7 +24,7 @@ object Dependencies {
         // Plugin
         const val androidPlugin = "3.6.1"
         const val gradlePublishPlugin = "0.10.1"
-        const val ktlintGradle = "9.2.1"
+        const val ktlintGradlePlugin = "9.2.1"
         const val gradleVersionsPlugin = "0.28.0"
 
         // Library

@@ -2,12 +2,12 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
-    kotlin("jvm")
+    kotlin("jvm") version Dependencies.Version.kotlin
     `kotlin-dsl`
     id("com.gradle.plugin-publish") version Dependencies.Version.gradlePublishPlugin
     `java-gradle-plugin`
-    id("org.jlleitschuh.gradle.ktlint")
-    id("com.github.ben-manes.versions")
+    id("org.jlleitschuh.gradle.ktlint") version Dependencies.Version.ktlintGradlePlugin
+    id("com.github.ben-manes.versions") version Dependencies.Version.gradleVersionsPlugin
 }
 
 version = ModuleConfig.version
