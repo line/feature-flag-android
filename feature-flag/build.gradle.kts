@@ -1,3 +1,4 @@
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
@@ -30,6 +31,27 @@ tasks.withType(Test::class.java) {
     useJUnitPlatform {
         includeEngines("spek2")
     }
+}
+
+fun isStable(version: String): Boolean {
+    val hasStableKeyword = setOf("RELEASE", "FINAL", "GA").any {
+        version.contains(version, ignoreCase = true)
+    }
+    val regex = """^[0-9,.v-]+(-r)?$""".toRegex()
+    return hasStableKeyword || regex.matches(version)
+}
+
+tasks.withType<DependencyUpdatesTask> {
+    resolutionStrategy {
+        componentSelection {
+            all {
+                if (!isStable(candidate.version) && isStable(currentVersion)) {
+                    reject("Release candidate")
+                }
+            }
+        }
+    }
+    checkForGradleUpdate = true
 }
 
 dependencies {
