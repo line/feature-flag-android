@@ -125,9 +125,16 @@ abstract class FeatureFlagTask : DefaultTask() {
         buildEnvironment: BuildEnvironment
     ): FeatureFlagData {
         val options = FeatureFlagOptionParser.parse(entry.option)
-        val selectors = FeatureFlagSelectorParser.parse(entry.value)
-        val evaluatedSelectors = FeatureFlagSelectorEvaluator.evaluate(selectors, buildEnvironment)
-        val value = FeatureFlagValueOptimizer.optimize(evaluatedSelectors)
+        val value = convertToFeatureFlagValue(entry.value, buildEnvironment)
         return FeatureFlagData(entry.name, value, options)
+    }
+
+    private fun convertToFeatureFlagValue(
+        rawValue: String,
+        buildEnvironment: BuildEnvironment
+    ): FeatureFlagData.Value {
+        val selectors = FeatureFlagSelectorParser.parse(rawValue)
+        val evaluatedSelectors = FeatureFlagSelectorEvaluator.evaluate(selectors, buildEnvironment)
+        return FeatureFlagValueOptimizer.optimize(evaluatedSelectors)
     }
 }
