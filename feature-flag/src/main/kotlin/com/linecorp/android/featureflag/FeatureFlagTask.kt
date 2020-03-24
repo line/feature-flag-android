@@ -125,14 +125,21 @@ abstract class FeatureFlagTask : DefaultTask() {
         buildEnvironment: BuildEnvironment
     ): FeatureFlagData {
         val options = FeatureFlagOptionParser.parse(entry.option)
-        val value = convertToFeatureFlagValue(entry.value, buildEnvironment)
+        val value = convertToFeatureFlagValue(entry.name, entry.value, buildEnvironment)
         return FeatureFlagData(entry.name, value, options)
     }
 
     private fun convertToFeatureFlagValue(
+        flagName: String,
         rawValue: String,
         buildEnvironment: BuildEnvironment
     ): FeatureFlagData.Value {
+        if (forciblyOverriddenFeatureFlags.forciblyEnabledFlags.contains(flagName)) {
+            return FeatureFlagData.Value.True
+        }
+        if (forciblyOverriddenFeatureFlags.forciblyDisabledFlags.contains(flagName)) {
+            return FeatureFlagData.Value.False
+        }
         val selectors = FeatureFlagSelectorParser.parse(rawValue)
         val evaluatedSelectors = FeatureFlagSelectorEvaluator.evaluate(selectors, buildEnvironment)
         return FeatureFlagValueOptimizer.optimize(evaluatedSelectors)
