@@ -96,7 +96,14 @@ abstract class FeatureFlagTask : DefaultTask() {
             currentUserName
         )
         val properties = sourceFile.useLines(block = FeatureFlagFileTokenizer::parse)
-        val featureFlags = properties.entries.map { convertToFeatureFlagData(it, buildEnvironment) }
+        val featureFlags = properties.entries.map {
+            convertToFeatureFlagData(
+                it,
+                buildEnvironment,
+                forciblyOverriddenFeatureFlags.forciblyEnabledFlags,
+                forciblyOverriddenFeatureFlags.forciblyDisabledFlags
+            )
+        }
         val writer = FeatureFlagJavaFileWriter(
             outputDirectory,
             packageName,
@@ -122,12 +129,26 @@ abstract class FeatureFlagTask : DefaultTask() {
 
     private fun convertToFeatureFlagData(
         entry: FeatureFlagProperties.Entry,
-        buildEnvironment: BuildEnvironment
+        buildEnvironment: BuildEnvironment,
+        forciblyEnabledFlags: Set<String>,
+        forciblyDisabledFlags: Set<String>
     ): FeatureFlagData {
         val options = FeatureFlagOptionParser.parse(entry.option)
-        val selectors = FeatureFlagSelectorParser.parse(entry.value)
+        val flagName = entry.name
+        val value = when (flagName) {
+            in forciblyEnabledFlags -> FeatureFlagData.Value.True
+            in forciblyDisabledFlags -> FeatureFlagData.Value.False
+            else -> evaluateFlagValue(entry.value, buildEnvironment)
+        }
+        return FeatureFlagData(flagName, value, options)
+    }
+
+    private fun evaluateFlagValue(
+        rawValue: String,
+        buildEnvironment: BuildEnvironment
+    ): FeatureFlagData.Value {
+        val selectors = FeatureFlagSelectorParser.parse(rawValue)
         val evaluatedSelectors = FeatureFlagSelectorEvaluator.evaluate(selectors, buildEnvironment)
-        val value = FeatureFlagValueOptimizer.optimize(evaluatedSelectors)
-        return FeatureFlagData(entry.name, value, options)
+        return FeatureFlagValueOptimizer.optimize(evaluatedSelectors)
     }
 }
