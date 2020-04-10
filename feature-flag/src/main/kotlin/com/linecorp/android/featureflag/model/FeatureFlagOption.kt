@@ -38,4 +38,8 @@ internal enum class FeatureFlagOption {
      * This option cannot be used with [OVERRIDABLE] option at the same time.
      */
     LITERALIZE,
+    /**
+     * An option to make a flag value deprecated.
+     */
+    DEPRECATED,
 }

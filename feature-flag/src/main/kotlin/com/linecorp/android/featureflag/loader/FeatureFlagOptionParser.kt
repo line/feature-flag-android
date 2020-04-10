@@ -31,7 +31,8 @@ internal object FeatureFlagOptionParser {
     internal val OPTION_MAPPING = mapOf(
         "OVERRIDABLE" to FeatureFlagOption.OVERRIDABLE,
         "PRIVATE" to FeatureFlagOption.PRIVATE,
-        "LITERALIZE" to FeatureFlagOption.LITERALIZE
+        "LITERALIZE" to FeatureFlagOption.LITERALIZE,
+        "DEPRECATED" to FeatureFlagOption.DEPRECATED
     )
 
     /**
