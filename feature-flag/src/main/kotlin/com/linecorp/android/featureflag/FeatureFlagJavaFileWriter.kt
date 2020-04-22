@@ -73,10 +73,9 @@ internal class FeatureFlagJavaFileWriter(
         val actualFlagValue = flag.value.toJavaValue(isRequiredLiteralValue)
 
         if (flag.hasOption(FeatureFlagOption.DEPRECATED)) {
-            emitAnnotation("Deprecated")
+            emitAnnotation(Deprecated::class.java)
         }
         emitField(JavaType.BOOLEAN, flag.name, flag.getFieldModifier(), actualFlagValue)
-
     }
 
     private fun JavaWriter.writeOverridableFlags(flags: List<FeatureFlagData>) {
@@ -85,7 +84,7 @@ internal class FeatureFlagJavaFileWriter(
             val flagValue = flag.value.toJavaValue(true)
             println("$flagName = $flagValue")
             if (flag.hasOption(FeatureFlagOption.DEPRECATED)) {
-                emitAnnotation("Deprecated")
+                emitAnnotation(Deprecated::class.java)
             }
             emitField(
                 JavaType.BOOLEAN,
