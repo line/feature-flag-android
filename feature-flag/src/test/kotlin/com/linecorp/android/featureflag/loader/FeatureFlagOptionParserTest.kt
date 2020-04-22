@@ -75,7 +75,11 @@ object FeatureFlagOptionParserTest : Spek({
             val expectedResults = listOf(
                 setOf(PRIVATE),
                 setOf(PRIVATE, OVERRIDABLE),
-                setOf(PRIVATE, OVERRIDABLE)
+                setOf(PRIVATE, OVERRIDABLE),
+                setOf(DEPRECATED),
+                setOf(DEPRECATED, PRIVATE),
+                setOf(PRIVATE, OVERRIDABLE, DEPRECATED),
+                setOf(PRIVATE, OVERRIDABLE, DEPRECATED)
             )
 
             val testCases = loadLinesFromFile("OPTION_VALID_DUPLICATED")
