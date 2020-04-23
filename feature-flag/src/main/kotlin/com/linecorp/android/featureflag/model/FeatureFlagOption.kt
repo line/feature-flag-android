@@ -17,7 +17,7 @@
 package com.linecorp.android.featureflag.model
 
 /**
- * Type of feature flag options to specify the flag visibility and mutability.
+ * Type of feature flag options to specify the flag visibility, mutability and annotations.
  */
 internal enum class FeatureFlagOption {
     /**
@@ -38,4 +38,8 @@ internal enum class FeatureFlagOption {
      * This option cannot be used with [OVERRIDABLE] option at the same time.
      */
     LITERALIZE,
+    /**
+     * An option to annotate a flag with [Deprecated].
+     */
+    DEPRECATED,
 }

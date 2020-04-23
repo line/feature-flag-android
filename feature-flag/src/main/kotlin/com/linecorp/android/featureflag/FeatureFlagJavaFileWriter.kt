@@ -72,6 +72,9 @@ internal class FeatureFlagJavaFileWriter(
         // static analyzer.
         val actualFlagValue = flag.value.toJavaValue(isRequiredLiteralValue)
 
+        if (flag.hasOption(FeatureFlagOption.DEPRECATED)) {
+            emitAnnotation(Deprecated::class.java)
+        }
         emitField(JavaType.BOOLEAN, flag.name, flag.getFieldModifier(), actualFlagValue)
     }
 
@@ -80,6 +83,9 @@ internal class FeatureFlagJavaFileWriter(
             val flagName = flag.name
             val flagValue = flag.value.toJavaValue(true)
             println("$flagName = $flagValue")
+            if (flag.hasOption(FeatureFlagOption.DEPRECATED)) {
+                emitAnnotation(Deprecated::class.java)
+            }
             emitField(
                 JavaType.BOOLEAN,
                 flagName,

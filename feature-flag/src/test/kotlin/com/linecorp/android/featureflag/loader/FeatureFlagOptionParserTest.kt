@@ -17,6 +17,7 @@
 package com.linecorp.android.featureflag.loader
 
 import com.linecorp.android.featureflag.model.FeatureFlagOption
+import com.linecorp.android.featureflag.model.FeatureFlagOption.DEPRECATED
 import com.linecorp.android.featureflag.model.FeatureFlagOption.OVERRIDABLE
 import com.linecorp.android.featureflag.model.FeatureFlagOption.PRIVATE
 import com.linecorp.android.featureflag.utils.assertFailureMessage
@@ -50,7 +51,10 @@ object FeatureFlagOptionParserTest : Spek({
         context("with normal case") {
             val expectedResults = listOf(
                 setOf(PRIVATE),
-                setOf(PRIVATE, OVERRIDABLE)
+                setOf(PRIVATE, OVERRIDABLE),
+                setOf(DEPRECATED),
+                setOf(PRIVATE, DEPRECATED),
+                setOf(PRIVATE, OVERRIDABLE, DEPRECATED)
             )
             val testCases = loadLinesFromFile("OPTION_VALID_NORMAL")
 
@@ -71,7 +75,11 @@ object FeatureFlagOptionParserTest : Spek({
             val expectedResults = listOf(
                 setOf(PRIVATE),
                 setOf(PRIVATE, OVERRIDABLE),
-                setOf(PRIVATE, OVERRIDABLE)
+                setOf(PRIVATE, OVERRIDABLE),
+                setOf(DEPRECATED),
+                setOf(DEPRECATED, PRIVATE),
+                setOf(PRIVATE, OVERRIDABLE, DEPRECATED),
+                setOf(PRIVATE, OVERRIDABLE, DEPRECATED)
             )
 
             val testCases = loadLinesFromFile("OPTION_VALID_DUPLICATED")
