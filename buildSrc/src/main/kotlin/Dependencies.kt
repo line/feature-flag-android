@@ -19,16 +19,16 @@ object Dependencies {
 
     object Version {
         // Language
-        const val kotlin = "1.3.70"
+        const val kotlin = "1.3.72"
 
         // Plugin
         const val androidPlugin = "3.6.1"
-        const val gradlePublishPlugin = "0.10.1"
+        const val gradlePublishPlugin = "0.12.0"
         const val ktlintGradlePlugin = "9.2.1"
         const val gradleVersionsPlugin = "0.28.0"
 
         // Library
-        const val spek = "2.0.9"
-        const val mockk = "1.9.3"
+        const val spek = "2.0.10"
+        const val mockk = "1.10.0"
     }
 }
