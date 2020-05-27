@@ -326,6 +326,8 @@ internal class FeatureFlagJavaFileWriter(
     companion object {
         private const val FEATURE_FLAG_CLASS_NAME = "FeatureFlag"
 
+        // We specify annotation by name instead of `Class` to use `java.lang` package rather than
+        // `kotlin`.
         private const val DEPRECATED_ANNOTATION_CLASS_NAME = "Deprecated"
     }
 }
