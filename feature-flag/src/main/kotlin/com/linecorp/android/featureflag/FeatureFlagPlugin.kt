@@ -18,7 +18,6 @@ package com.linecorp.android.featureflag
 
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.BaseExtension
-import com.android.build.gradle.FeatureExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.api.BaseVariant
 import com.linecorp.android.featureflag.model.BuildVariant
@@ -73,7 +72,6 @@ class FeatureFlagPlugin : Plugin<Project> {
 
     private fun BaseExtension.getVariants(): DomainObjectSet<out BaseVariant>? = when (this) {
         is AppExtension -> applicationVariants
-        is FeatureExtension -> featureVariants
         is LibraryExtension -> libraryVariants
         else -> null
     }
