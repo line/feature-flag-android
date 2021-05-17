@@ -31,7 +31,9 @@ import kotlin.test.assertEquals
 object FeatureFlagFileTokenizerTest : Spek({
 
     fun loadSequenceFromFile(name: String): Sequence<String> {
-        val url = checkNotNull(javaClass.classLoader.getResource("tests/FeatureFlagFileTokenizerTest/$name"))
+        val url = checkNotNull(
+            javaClass.classLoader.getResource("tests/FeatureFlagFileTokenizerTest/$name")
+        )
         return File(url.toURI()).bufferedReader().lineSequence()
     }
 

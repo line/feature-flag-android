@@ -35,7 +35,9 @@ import java.io.File
  */
 object FeatureFlagSelectorParserTest : Spek({
     fun loadLinesFromFile(name: String): List<String> {
-        val url = checkNotNull(javaClass.classLoader.getResource("tests/FeatureFlagSelectorParserTest/$name"))
+        val url = checkNotNull(
+            javaClass.classLoader.getResource("tests/FeatureFlagSelectorParserTest/$name")
+        )
         return File(url.toURI()).bufferedReader().lineSequence().toList()
     }
 
@@ -53,7 +55,10 @@ object FeatureFlagSelectorParserTest : Spek({
 
             testCases.forEachIndexed { index, testValue ->
                 it(testValue) {
-                    assertDisjunction(expectedResults[index], FeatureFlagSelectorParser.parse(testValue))
+                    assertDisjunction(
+                        expectedResults[index],
+                        FeatureFlagSelectorParser.parse(testValue)
+                    )
                 }
             }
         }
@@ -71,7 +76,8 @@ object FeatureFlagSelectorParserTest : Spek({
         }
 
         context("with disjunction and space") {
-            val expected = disjunctionOf(conjunctionOf(Phase("PHASE1")), conjunctionOf(Phase("PHASE2")))
+            val expected =
+                disjunctionOf(conjunctionOf(Phase("PHASE1")), conjunctionOf(Phase("PHASE2")))
 
             val testCases = loadLinesFromFile("VALUE_VALID_DISJUNCTION_WITH_SPACE")
 
@@ -96,8 +102,14 @@ object FeatureFlagSelectorParserTest : Spek({
 
         context("on combination of disjunction and conjunction") {
             val expectedResults = listOf(
-                disjunctionOf(conjunctionOf(Phase("PHASE1")), conjunctionOf(Phase("PHASE2"), Phase("PHASE3"))),
-                disjunctionOf(conjunctionOf(Phase("PHASE1"), Phase("PHASE2")), conjunctionOf(Phase("PHASE3"))),
+                disjunctionOf(
+                    conjunctionOf(Phase("PHASE1")),
+                    conjunctionOf(Phase("PHASE2"), Phase("PHASE3"))
+                ),
+                disjunctionOf(
+                    conjunctionOf(Phase("PHASE1"), Phase("PHASE2")),
+                    conjunctionOf(Phase("PHASE3"))
+                ),
                 disjunctionOf(
                     conjunctionOf(Phase("PHASE1"), Phase("PHASE2")),
                     conjunctionOf(Phase("PHASE3"), Phase("PHASE4"))
@@ -108,7 +120,10 @@ object FeatureFlagSelectorParserTest : Spek({
 
             testCases.forEachIndexed { index, testValue ->
                 it(testValue) {
-                    assertDisjunction(expectedResults[index], FeatureFlagSelectorParser.parse(testValue))
+                    assertDisjunction(
+                        expectedResults[index],
+                        FeatureFlagSelectorParser.parse(testValue)
+                    )
                 }
             }
         }
@@ -117,47 +132,79 @@ object FeatureFlagSelectorParserTest : Spek({
     describe("Parsing is failed") {
         context("on each element type") {
             it("User element with no value") {
-                assertFailureMessage<IllegalArgumentException>("Missing user name in user element.") {
-                    FeatureFlagSelectorParser.parse(loadLinesFromFile("VALUE_INVALID_ELEMENT_USER")[0])
+                assertFailureMessage<IllegalArgumentException>(
+                    "Missing user name in user element."
+                ) {
+                    FeatureFlagSelectorParser.parse(
+                        loadLinesFromFile("VALUE_INVALID_ELEMENT_USER")[0]
+                    )
                 }
             }
             it("Link element with no value") {
-                assertFailureMessage<IllegalArgumentException>("Missing link value in link element.") {
-                    FeatureFlagSelectorParser.parse(loadLinesFromFile("VALUE_INVALID_ELEMENT_LINK_SELF")[0])
+                assertFailureMessage<IllegalArgumentException>(
+                    "Missing link value in link element."
+                ) {
+                    FeatureFlagSelectorParser.parse(
+                        loadLinesFromFile("VALUE_INVALID_ELEMENT_LINK_SELF")[0]
+                    )
                 }
             }
             it("Link element with no value") {
-                assertFailureMessage<IllegalArgumentException>("Missing link value in link element.") {
-                    FeatureFlagSelectorParser.parse(loadLinesFromFile("VALUE_INVALID_ELEMENT_LINK_ANOTHER")[0])
+                assertFailureMessage<IllegalArgumentException>(
+                    "Missing link value in link element."
+                ) {
+                    FeatureFlagSelectorParser.parse(
+                        loadLinesFromFile("VALUE_INVALID_ELEMENT_LINK_ANOTHER")[0]
+                    )
                 }
             }
             it("Version element with no value") {
-                assertFailureMessage<IllegalArgumentException>("Missing version value in version element.") {
-                    FeatureFlagSelectorParser.parse(loadLinesFromFile("VALUE_INVALID_ELEMENT_VERSION")[0])
+                assertFailureMessage<IllegalArgumentException>(
+                    "Missing version value in version element."
+                ) {
+                    FeatureFlagSelectorParser.parse(
+                        loadLinesFromFile("VALUE_INVALID_ELEMENT_VERSION")[0]
+                    )
                 }
             }
         }
         context("on conjunction") {
             it("with no value") {
-                assertFailureMessage<IllegalArgumentException>("An invalid blank element exists.") {
-                    FeatureFlagSelectorParser.parse(loadLinesFromFile("VALUE_INVALID_CONJUNCTION_EMPTY")[0])
+                assertFailureMessage<IllegalArgumentException>(
+                    "An invalid blank element exists."
+                ) {
+                    FeatureFlagSelectorParser.parse(
+                        loadLinesFromFile("VALUE_INVALID_CONJUNCTION_EMPTY")[0]
+                    )
                 }
             }
             it("with only one sides value") {
-                assertFailureMessage<IllegalArgumentException>("An invalid blank element exists.") {
-                    FeatureFlagSelectorParser.parse(loadLinesFromFile("VALUE_INVALID_CONJUNCTION_ONE_SIDE")[0])
+                assertFailureMessage<IllegalArgumentException>(
+                    "An invalid blank element exists."
+                ) {
+                    FeatureFlagSelectorParser.parse(
+                        loadLinesFromFile("VALUE_INVALID_CONJUNCTION_ONE_SIDE")[0]
+                    )
                 }
             }
         }
         context("on disjunction") {
             it("with no value") {
-                assertFailureMessage<IllegalArgumentException>("An invalid blank element exists.") {
-                    FeatureFlagSelectorParser.parse(loadLinesFromFile("VALUE_INVALID_DISJUNCTION_EMPTY")[0])
+                assertFailureMessage<IllegalArgumentException>(
+                    "An invalid blank element exists."
+                ) {
+                    FeatureFlagSelectorParser.parse(
+                        loadLinesFromFile("VALUE_INVALID_DISJUNCTION_EMPTY")[0]
+                    )
                 }
             }
             it("with only one sides value") {
-                assertFailureMessage<IllegalArgumentException>("An invalid blank element exists.") {
-                    FeatureFlagSelectorParser.parse(loadLinesFromFile("VALUE_INVALID_DISJUNCTION_ONE_SIDE")[0])
+                assertFailureMessage<IllegalArgumentException>(
+                    "An invalid blank element exists."
+                ) {
+                    FeatureFlagSelectorParser.parse(
+                        loadLinesFromFile("VALUE_INVALID_DISJUNCTION_ONE_SIDE")[0]
+                    )
                 }
             }
         }
