@@ -54,7 +54,7 @@ class FeatureFlagPlugin : Plugin<Project> {
     private fun Project.installFeatureFlagGenerationTask(
         extension: FeatureFlagExtension
     ) {
-        val appExtension = project.android as? BaseExtension ?: throw RuntimeException(
+        val androidExtension = project.android as? BaseExtension ?: throw RuntimeException(
             "`feature-flag` plugin requires any of android plugin"
         )
 
@@ -65,7 +65,7 @@ class FeatureFlagPlugin : Plugin<Project> {
 
         // Here, we call `DefaultDomainObjectSet.all` instead of standard iterator extensions.
         // For more details, refer to `AppExtension.getApplicationVariants()`
-        appExtension.getVariants()?.all {
+        androidExtension.getVariants()?.all {
             installFeatureFlagGenerationTask(this, extension, localSourceFile, localPackageName)
         }
     }
