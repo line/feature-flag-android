@@ -32,7 +32,9 @@ import kotlin.test.assertEquals
  */
 object FeatureFlagOptionParserTest : Spek({
     fun loadLinesFromFile(name: String): List<String> {
-        val url = checkNotNull(javaClass.classLoader.getResource("tests/FeatureFlagOptionParserTest/$name"))
+        val url = checkNotNull(
+            javaClass.classLoader.getResource("tests/FeatureFlagOptionParserTest/$name")
+        )
         return File(url.toURI()).bufferedReader().lineSequence().toList()
     }
 
@@ -112,8 +114,12 @@ object FeatureFlagOptionParserTest : Spek({
 
     describe("Parsing is failed") {
         it("with undefined option") {
-            assertFailureMessage<IllegalArgumentException>("A specified option is undefined: INVALID") {
-                FeatureFlagOptionParser.parse(loadLinesFromFile("OPTION_INVALID_UNDEFINED_OPTION")[0])
+            assertFailureMessage<IllegalArgumentException>(
+                "A specified option is undefined: INVALID"
+            ) {
+                FeatureFlagOptionParser.parse(
+                    loadLinesFromFile("OPTION_INVALID_UNDEFINED_OPTION")[0]
+                )
             }
         }
     }

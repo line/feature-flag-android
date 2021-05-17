@@ -170,10 +170,16 @@ object FeatureFlagSelectorEvaluatorTest : Spek({
         context("multiple elements in conjunction") {
             assertStructureEvaluation(
                 disjunctionOf(
-                    conjunctionOf(FeatureFlagAppliedElement.Constant(false), FeatureFlagAppliedElement.Constant(false))
+                    conjunctionOf(
+                        FeatureFlagAppliedElement.Constant(false),
+                        FeatureFlagAppliedElement.Constant(false)
+                    )
                 ),
                 disjunctionOf(
-                    conjunctionOf(FeatureFlagElement.Phase("PHASE"), FeatureFlagElement.Phase("PHASE"))
+                    conjunctionOf(
+                        FeatureFlagElement.Phase("PHASE"),
+                        FeatureFlagElement.Phase("PHASE")
+                    )
                 )
             )
         }
@@ -194,11 +200,17 @@ object FeatureFlagSelectorEvaluatorTest : Spek({
         context("multiple elements in conjunction and multiple conjunction in disjunction") {
             assertStructureEvaluation(
                 disjunctionOf(
-                    conjunctionOf(FeatureFlagAppliedElement.Constant(false), FeatureFlagAppliedElement.Constant(false)),
+                    conjunctionOf(
+                        FeatureFlagAppliedElement.Constant(false),
+                        FeatureFlagAppliedElement.Constant(false)
+                    ),
                     conjunctionOf(FeatureFlagAppliedElement.Constant(false))
                 ),
                 disjunctionOf(
-                    conjunctionOf(FeatureFlagElement.Phase("PHASE"), FeatureFlagElement.Phase("PHASE")),
+                    conjunctionOf(
+                        FeatureFlagElement.Phase("PHASE"),
+                        FeatureFlagElement.Phase("PHASE")
+                    ),
                     conjunctionOf(FeatureFlagElement.Phase("PHASE"))
                 )
             )

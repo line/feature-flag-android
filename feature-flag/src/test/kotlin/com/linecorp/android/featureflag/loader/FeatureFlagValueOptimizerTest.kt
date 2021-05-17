@@ -67,7 +67,9 @@ object FeatureFlagValueOptimizerTest : Spek({
             }
             it("link: another module") {
                 assertOptimization(
-                    Value.Links(disjunctionOf(conjunctionOf(FlagLink("anotherModule", "flagName")))),
+                    Value.Links(
+                        disjunctionOf(conjunctionOf(FlagLink("anotherModule", "flagName")))
+                    ),
                     disjunctionOf(conjunctionOf(Variable(FlagLink("anotherModule", "flagName"))))
                 )
             }
@@ -94,7 +96,12 @@ object FeatureFlagValueOptimizerTest : Spek({
             it("false & link => false") {
                 assertOptimization(
                     Value.False,
-                    disjunctionOf(conjunctionOf(Constant(false), Variable(FlagLink("", "flagName"))))
+                    disjunctionOf(
+                        conjunctionOf(
+                            Constant(false),
+                            Variable(FlagLink("", "flagName"))
+                        )
+                    )
                 )
             }
             it("true & link => link") {
@@ -106,14 +113,30 @@ object FeatureFlagValueOptimizerTest : Spek({
             it("true & false & link => false") {
                 assertOptimization(
                     Value.False,
-                    disjunctionOf(conjunctionOf(Constant(true), Constant(false), Variable(FlagLink("", "flagName"))))
+                    disjunctionOf(
+                        conjunctionOf(
+                            Constant(true),
+                            Constant(false),
+                            Variable(FlagLink("", "flagName"))
+                        )
+                    )
                 )
             }
             it("link1 & link2 => link1 & link2") {
                 assertOptimization(
-                    Value.Links(disjunctionOf(conjunctionOf(FlagLink("", "flagName1"), FlagLink("", "flagName2")))),
+                    Value.Links(
+                        disjunctionOf(
+                            conjunctionOf(
+                                FlagLink("", "flagName1"),
+                                FlagLink("", "flagName2")
+                            )
+                        )
+                    ),
                     disjunctionOf(
-                        conjunctionOf(Variable(FlagLink("", "flagName1")), Variable(FlagLink("", "flagName2")))
+                        conjunctionOf(
+                            Variable(FlagLink("", "flagName1")),
+                            Variable(FlagLink("", "flagName2"))
+                        )
                     )
                 )
             }
@@ -140,13 +163,19 @@ object FeatureFlagValueOptimizerTest : Spek({
             it("false | link => link") {
                 assertOptimization(
                     Value.Links(disjunctionOf(conjunctionOf(FlagLink("", "flagName")))),
-                    disjunctionOf(conjunctionOf(Constant(false)), conjunctionOf(Variable(FlagLink("", "flagName"))))
+                    disjunctionOf(
+                        conjunctionOf(Constant(false)),
+                        conjunctionOf(Variable(FlagLink("", "flagName")))
+                    )
                 )
             }
             it("true | link => true") {
                 assertOptimization(
                     Value.True,
-                    disjunctionOf(conjunctionOf(Constant(true)), conjunctionOf(Variable(FlagLink("", "flagName"))))
+                    disjunctionOf(
+                        conjunctionOf(Constant(true)),
+                        conjunctionOf(Variable(FlagLink("", "flagName")))
+                    )
                 )
             }
             it("true | false | link => true") {

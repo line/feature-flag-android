@@ -21,16 +21,21 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 /**
- * Asserts that a [block] operation fails with an exception, where the type is [T] and the message is [failureMessage].
+ * Asserts that a [block] operation fails with an exception, where the type is [T] and the message
+ * is [failureMessage].
  */
-internal inline fun <reified T : Throwable> assertFailureMessage(failureMessage: String, block: () -> Unit) {
+internal inline fun <reified T : Throwable> assertFailureMessage(
+    failureMessage: String,
+    block: () -> Unit
+) {
     val exception = assertFailsWith<T> { block() }
     assertEquals(failureMessage, exception.message)
 }
 
 /**
  * Asserts that the given two [DisjunctionNormalForm.Disjunction]s are equal.
- * In other words, returns true if and only if equals returns true for each conjunction pair in zipped disjunctions.
+ * In other words, returns true if and only if equals returns true for each conjunction pair in
+ * zipped disjunctions.
  */
 internal fun <T> assertDisjunction(
     expected: DisjunctionNormalForm.Disjunction<out T>,

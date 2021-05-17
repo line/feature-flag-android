@@ -1,0 +1,22 @@
+name: Publish to Gradle Plugins Portal
+
+on:
+  workflow_dispatch:
+    inputs:
+      cond_release:
+        required: true
+        description: 'Type "release" to release artifacts to Gradle Plugins Portal.'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: deploy
+    steps:
+      - uses: actions/checkout@v2
+      - uses: gradle/wrapper-validation-action@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Publish artifacts
+        if: ${{ github.event.inputs.cond_release == 'release' }}
+        run: ./gradlew clean :feature-flag:publishPlugin -Dgradle.publish.key="${{ secrets.GRADLE_PLUGIN_PORTAL_PUBLISH_KEY }}" -Dgradle.publish.secret="${{ secrets.GRADLE_PLUGIN_PORTAL_PUBLISH_SECRET }}"
