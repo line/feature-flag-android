@@ -58,6 +58,11 @@ class FeatureFlagPlugin : Plugin<Project> {
             "`feature-flag` plugin requires any of android plugin"
         )
 
+        val applicationVersionName =
+            androidExtension.defaultConfig.versionName ?: throw RuntimeException(
+                "Missing `android.defaultConfig.versionName` option"
+            )
+
         val localSourceFile = extension.sourceFile.takeIf(File::exists)
             ?: throw RuntimeException("Missing `sourceFile` option or file isn't exist")
 
@@ -66,7 +71,13 @@ class FeatureFlagPlugin : Plugin<Project> {
         // Here, we call `DefaultDomainObjectSet.all` instead of standard iterator extensions.
         // For more details, refer to `AppExtension.getApplicationVariants()`
         androidExtension.getVariants()?.all {
-            installFeatureFlagGenerationTask(this, extension, localSourceFile, localPackageName)
+            installFeatureFlagGenerationTask(
+                this,
+                extension,
+                applicationVersionName,
+                localSourceFile,
+                localPackageName
+            )
         }
     }
 
@@ -79,6 +90,7 @@ class FeatureFlagPlugin : Plugin<Project> {
     private fun Project.installFeatureFlagGenerationTask(
         variant: BaseVariant,
         extension: FeatureFlagExtension,
+        versionName: String,
         featureFlagSourceFile: File,
         applicationPackageName: String?
     ) {
@@ -94,7 +106,7 @@ class FeatureFlagPlugin : Plugin<Project> {
             packageName = applicationPackageName ?: variant.applicationId
             phaseMap = getPhaseMap(extension.phases, currentBuildVariant)
             isReleaseVariant = extension.releasePhaseSet.any(currentBuildVariant::includes)
-            applicationVersionName = project.android.defaultConfig.versionName
+            applicationVersionName = versionName
             currentUserName = System.getProperty("user.name")
             forciblyOverriddenFeatureFlags = ForciblyOverriddenFeatureFlags.parse(project)
         }
