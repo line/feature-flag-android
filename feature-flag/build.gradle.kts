@@ -8,6 +8,7 @@ plugins {
     `java-gradle-plugin`
     id("org.jlleitschuh.gradle.ktlint") version Dependencies.Version.ktlintGradlePlugin
     id("com.github.ben-manes.versions") version Dependencies.Version.gradleVersionsPlugin
+    `maven-publish`
 }
 
 version = ModuleConfig.version
@@ -75,6 +76,16 @@ pluginBundle {
         "featureFlagPlugin" {
             displayName = "feature-flag-android"
             tags = listOf("android", "feature-flag", "feature-toggle")
+            version = ModuleConfig.version
+        }
+    }
+}
+
+publishing {
+    publications {
+        maybeCreate("pluginMaven", MavenPublication::class.java).apply {
+            groupId = ModuleConfig.groupId
+            artifactId = ModuleConfig.pluginId
             version = ModuleConfig.version
         }
     }
