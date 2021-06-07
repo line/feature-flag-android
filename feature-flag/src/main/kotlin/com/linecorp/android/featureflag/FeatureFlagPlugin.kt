@@ -57,8 +57,11 @@ class FeatureFlagPlugin : Plugin<Project> {
         val androidExtension = project.android as? BaseExtension
             ?: throw RuntimeException("`feature-flag` plugin requires any of android plugin")
 
-        val applicationVersionName = androidExtension.defaultConfig.versionName
-            ?: throw RuntimeException("Missing `android.defaultConfig.versionName` option")
+        val applicationVersionName = extension.versionName.takeIf(String::isNotEmpty)
+            ?: androidExtension.defaultConfig.versionName
+            ?: throw RuntimeException(
+                "Missing `featureFlag.versionName` or `android.defaultConfig.versionName` option"
+            )
 
         val localSourceFile = extension.sourceFile.takeIf(File::exists)
             ?: throw RuntimeException("Missing `sourceFile` option or file isn't exist")
