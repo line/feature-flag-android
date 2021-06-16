@@ -30,6 +30,7 @@ open class FeatureFlagExtension(project: Project) {
     var phases: Map<String, Set<BuildVariant.Element>> = mapOf()
     var releasePhaseSet: Set<BuildVariant.Element> = setOf()
     var packageName: String = ""
+    var versionName: String = ""
 
     fun buildType(name: String): BuildVariant.Element = BuildVariant.Element.BuildType(name)
 

@@ -65,6 +65,9 @@ Definition of each property is as follows.
 - `packageName`: A package name of generated `FeatureFlag` class.
 - `phases`: A list of pairs of phase and the corresponding build variants.
 - `releasePhaseSet`: Build variants to allow using primitive boolean values as flag values. An optimizer may inline flag values with the variants. `buildType` or `flavor` can be specified as a variant.
+- `versionName`: (Optional) A version name which can override application version name.
+
+   Also, this property can be assigned for library module since Android Gradle Plugin 7.0 or higher.
 
 ## How to use
 
