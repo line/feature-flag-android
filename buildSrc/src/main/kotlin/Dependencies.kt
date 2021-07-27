@@ -19,7 +19,10 @@ object Dependencies {
 
     object Version {
         // Language
-        const val kotlin = "1.3.72"
+
+        // Note: Please make sure to match the dependent version of Android Gradle Plugin.
+        // https://mvnrepository.com/artifact/com.android.tools.build/gradle?repo=google
+        const val kotlin = "1.4.31"
 
         // Plugin
         const val androidPlugin = "4.2.2"
