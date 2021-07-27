@@ -22,7 +22,7 @@ object Dependencies {
         const val kotlin = "1.3.72"
 
         // Plugin
-        const val androidPlugin = "4.1.3"
+        const val androidPlugin = "4.2.2"
         const val gradlePublishPlugin = "0.14.0"
         const val ktlintGradlePlugin = "10.0.0"
         const val gradleVersionsPlugin = "0.38.0"
