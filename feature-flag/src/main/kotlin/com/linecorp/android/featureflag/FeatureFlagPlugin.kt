@@ -28,7 +28,9 @@ import com.linecorp.android.featureflag.util.getProductFlavorSet
 import org.gradle.api.DomainObjectSet
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.kotlin.dsl.create
+import org.gradle.util.GradleVersion
 import java.io.File
 
 /**
@@ -101,6 +103,7 @@ class FeatureFlagPlugin : Plugin<Project> {
 
         val taskName = "generate${variant.name.capitalize()}FeatureFlag"
         val taskProvider = tasks.register(taskName, FeatureFlagTask::class.java) {
+            markNotCompatibleWithConfigurationCache(this)
             sourceFile = featureFlagSourceFile
             outputDirectory = getFeatureFlagOutputDir(variant)
             packageName = applicationPackageName ?: variant.applicationId
@@ -118,4 +121,19 @@ class FeatureFlagPlugin : Plugin<Project> {
         phases: Map<String, Set<BuildVariant.Element>>,
         currentBuildVariant: BuildVariant
     ): Map<String, Boolean> = phases.mapValues { it.value.any(currentBuildVariant::includes) }
+
+    private fun markNotCompatibleWithConfigurationCache(task: Task) {
+        if (isConfigurationCacheAvailable) {
+            task.notCompatibleWithConfigurationCache(
+                "Requires Project instance to resolve build variants during task execution."
+            )
+        }
+    }
+
+    companion object {
+        private val gradle_7_4 = GradleVersion.version("7.4")
+        private val gradle_current = GradleVersion.current()
+        // Configuration cache method incubating in Gradle 7.4
+        private val isConfigurationCacheAvailable = gradle_7_4 <= gradle_current
+    }
 }
