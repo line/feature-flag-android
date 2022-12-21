@@ -123,17 +123,18 @@ class FeatureFlagPlugin : Plugin<Project> {
     ): Map<String, Boolean> = phases.mapValues { it.value.any(currentBuildVariant::includes) }
 
     private fun markNotCompatibleWithConfigurationCache(task: Task) {
-        if (isConfigurationCacheAvailable) {
-            task.notCompatibleWithConfigurationCache(
+        try {
+            // Configuration cache method incubating in Gradle 7.4
+            val method = Task::class.java.getDeclaredMethod(
+                "notCompatibleWithConfigurationCache",
+                java.lang.String::class.java
+            )
+            method.invoke(
+                task,
                 "Requires Project instance to resolve build variants during task execution."
             )
+        } catch (ex: NoSuchMethodException) {
+            // pass
         }
-    }
-
-    companion object {
-        private val gradle_7_4 = GradleVersion.version("7.4")
-        private val gradle_current = GradleVersion.current()
-        // Configuration cache method incubating in Gradle 7.4
-        private val isConfigurationCacheAvailable = gradle_7_4 <= gradle_current
     }
 }
