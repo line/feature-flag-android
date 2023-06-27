@@ -62,7 +62,7 @@ featureFlag {
 Definition of each property is as follows. 
 
 - `sourceFile`: A feature flag property `File` to read.
-- `packageName`: A package name of generated `FeatureFlag` class.
+- `packageName`: (Optional) A package name of generated `FeatureFlag` class. If this is not set, packageName will be set from `namespace` of Android Gradle Plugin
 - `phases`: A list of pairs of phase and the corresponding build variants.
 - `releasePhaseSet`: Build variants to allow using primitive boolean values as flag values. An optimizer may inline flag values with the variants. `buildType` or `flavor` can be specified as a variant.
 - `versionName`: (Optional) A version name which can override application version name.

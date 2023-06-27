@@ -67,6 +67,10 @@ class FeatureFlagPlugin : Plugin<Project> {
             ?: throw RuntimeException("Missing `sourceFile` option or file isn't exist")
 
         val localPackageName = extension.packageName.takeIf(String::isNotEmpty)
+            ?: androidExtension.namespace
+            ?: throw RuntimeException(
+                "Missing `featureFlag.packageName` or `android.namespace` option"
+            )
 
         // Here, we call `DefaultDomainObjectSet.all` instead of standard iterator extensions.
         // For more details, refer to `AppExtension.getApplicationVariants()`
