@@ -31,6 +31,7 @@ import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.kotlin.dsl.create
 import java.io.File
+import java.util.Locale
 
 /**
  * A gradle plugin adding a task to create a feature flag Java file from a property file.
@@ -104,7 +105,10 @@ class FeatureFlagPlugin : Plugin<Project> {
             variant.getProductFlavorSet()
         )
 
-        val taskName = "generate${variant.name.capitalize()}FeatureFlag"
+        val capitalizedVariantName = variant.name.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+        }
+        val taskName = "generate${capitalizedVariantName}FeatureFlag"
         val taskProvider = tasks.register(taskName, FeatureFlagTask::class.java) {
             markNotCompatibleWithConfigurationCache(this)
             sourceFile = featureFlagSourceFile
