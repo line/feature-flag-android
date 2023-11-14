@@ -11,6 +11,9 @@ kotlin = "1.4.31"
 # https://github.com/JLLeitschuh/ktlint-gradle/releases
 ktlint-gradle = "10.0.0"
 
+# https://github.com/zafarkhaja/jsemver
+jsemver = "0.9.0"
+
 # https://github.com/ben-manes/gradle-versions-plugin/releases
 ben-manes-gradle = "0.38.0"
 
@@ -31,6 +34,8 @@ android-gradle = { module = "com.android.tools.build:gradle", version.ref = "and
 kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+
+jsemver = { module = "com.github.zafarkhaja:java-semver", version.ref = "jsemver" }
 
 spek2-dsl-jvm = { module = "org.spekframework.spek2:spek-dsl-jvm", version.ref = "spek" }
 spek2-runner-junit5 = { module = "org.spekframework.spek2:spek-runner-junit5", version.ref = "spek" }

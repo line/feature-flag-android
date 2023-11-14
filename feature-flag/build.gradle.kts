@@ -59,6 +59,7 @@ tasks.withType<DependencyUpdatesTask> {
 
 dependencies {
     compileOnly(libs.android.gradle)
+    implementation(libs.jsemver)
 
     testImplementation(libs.kotlin.test)
     testImplementation(libs.mockk)

@@ -16,7 +16,7 @@
 
 package com.linecorp.android.featureflag.model
 
-import org.gradle.util.VersionNumber
+import com.github.zafarkhaja.semver.Version
 
 /**
  * A model class of the current build information: build phase, version, and user.
@@ -34,7 +34,7 @@ internal class BuildEnvironment(
     /**
      * A version of this module defined in the build script.
      */
-    val applicationVersion: VersionNumber,
+    val applicationVersion: Version,
     /**
      * An account name of the current task executor.
      */

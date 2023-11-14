@@ -37,8 +37,8 @@ import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.findByType
-import org.gradle.util.VersionNumber
 import java.io.File
+import com.github.zafarkhaja.semver.Version
 
 /**
  * A gradle task to generate feature flag Java file for the current module.
@@ -95,7 +95,7 @@ abstract class FeatureFlagTask : DefaultTask() {
         val moduleNameToFeatureFlagPackageMap = createModuleToFeatureFlagPackageMap(project)
         val buildEnvironment = BuildEnvironment(
             phaseMap,
-            VersionNumber.parse(applicationVersionName),
+            Version.valueOf(applicationVersionName),
             currentUserName
         )
         val properties = sourceFile.useLines(block = FeatureFlagFileTokenizer::parse)

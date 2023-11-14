@@ -16,6 +16,7 @@
 
 package com.linecorp.android.featureflag.loader
 
+import com.github.zafarkhaja.semver.Version
 import com.linecorp.android.featureflag.model.BuildEnvironment
 import com.linecorp.android.featureflag.model.DisjunctionNormalForm.Disjunction
 import com.linecorp.android.featureflag.model.FeatureFlagAppliedElement
@@ -25,7 +26,6 @@ import com.linecorp.android.featureflag.utils.assertDisjunction
 import com.linecorp.android.featureflag.utils.assertFailureMessage
 import com.linecorp.android.featureflag.utils.conjunctionOf
 import com.linecorp.android.featureflag.utils.disjunctionOf
-import org.gradle.util.VersionNumber
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 
@@ -43,7 +43,7 @@ object FeatureFlagSelectorEvaluatorTest : Spek({
         expectedDisjunction,
         FeatureFlagSelectorEvaluator.evaluate(
             disjunction,
-            BuildEnvironment(phasesMap, VersionNumber.parse(applicationVersion), userName)
+            BuildEnvironment(phasesMap, Version.valueOf(applicationVersion), userName)
         )
     )
 
@@ -163,7 +163,7 @@ object FeatureFlagSelectorEvaluatorTest : Spek({
             expectedDisjunction,
             sourceDisjunction,
             mapOf("PHASE" to false),
-            "0",
+            "0.0.1",
             ""
         )
 
@@ -222,7 +222,7 @@ object FeatureFlagSelectorEvaluatorTest : Spek({
             assertFailureMessage<IllegalArgumentException>("Unknown phase: PHASE") {
                 FeatureFlagSelectorEvaluator.evaluate(
                     disjunctionOf(conjunctionOf(FeatureFlagElement.Phase("PHASE"))),
-                    BuildEnvironment(emptyMap(), VersionNumber.parse("1.0.0"), "")
+                    BuildEnvironment(emptyMap(), Version.valueOf("1.0.0"), "")
                 )
             }
         }
