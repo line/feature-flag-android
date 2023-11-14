@@ -1,0 +1,44 @@
+[versions]
+
+feature-flag = "2.4.0"
+
+# https://developer.android.com/studio/releases/gradle-plugin
+android-gradle = "4.2.2"
+
+# https://kotlinlang.org/docs/releases.html#release-details
+kotlin = "1.4.31"
+
+# https://github.com/JLLeitschuh/ktlint-gradle/releases
+ktlint-gradle = "10.0.0"
+
+# https://github.com/ben-manes/gradle-versions-plugin/releases
+ben-manes-gradle = "0.38.0"
+
+# https://plugins.gradle.org/plugin/com.gradle.plugin-publish
+gradle-publish = "0.15.0"
+
+# https://github.com/spekframework/spek/releases
+spek = "2.0.10"
+
+# https://github.com/mockk/mockk/releases
+mockk = "1.10.0"
+
+
+[libraries]
+feature-flag = { module = "com.linecorp.android:com.linecorp.android.feature-flag", version.ref = "feature-flag" }
+
+android-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }
+kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+
+spek2-dsl-jvm = { module = "org.spekframework.spek2:spek-dsl-jvm", version.ref = "spek" }
+spek2-runner-junit5 = { module = "org.spekframework.spek2:spek-runner-junit5", version.ref = "spek" }
+
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+ktlint-gradle = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gradle" }
+gradle-publish = { id = "com.gradle.plugin-publish", version.ref = "gradle-publish" }
+ben-manes-gradle = { id = "com.github.ben-manes.versions", version.ref = "ben-manes-gradle" }

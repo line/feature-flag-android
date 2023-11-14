@@ -2,22 +2,22 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
-    kotlin("jvm") version Dependencies.Version.kotlin
+    alias(libs.plugins.kotlin.jvm)
     `kotlin-dsl`
-    id("com.gradle.plugin-publish") version Dependencies.Version.gradlePublishPlugin
+    alias(libs.plugins.gradle.publish)
     `java-gradle-plugin`
-    id("org.jlleitschuh.gradle.ktlint") version Dependencies.Version.ktlintGradlePlugin
-    id("com.github.ben-manes.versions") version Dependencies.Version.gradleVersionsPlugin
+    alias(libs.plugins.ktlint.gradle)
+    alias(libs.plugins.ben.manes.gradle)
     `maven-publish`
 }
 
-version = ModuleConfig.version
-group = ModuleConfig.groupId
+version = libs.versions.feature.flag.get()
+group = libs.feature.flag.get().module.group
 
 gradlePlugin {
     plugins {
         register("featureFlagPlugin") {
-            id = ModuleConfig.pluginId
+            id = libs.feature.flag.get().module.name
             implementationClass = "com.linecorp.android.featureflag.FeatureFlagPlugin"
         }
     }
@@ -58,13 +58,13 @@ tasks.withType<DependencyUpdatesTask> {
 }
 
 dependencies {
-    compileOnly(Dependencies.GradlePlugin.android)
+    compileOnly(libs.android.gradle)
 
-    testImplementation(Dependencies.Library.Kotlin.test)
-    testImplementation(Dependencies.Library.mockk)
-    testImplementation(Dependencies.Library.Spek2.dslJvm)
-    testRuntimeOnly(Dependencies.Library.Kotlin.reflect)
-    testRuntimeOnly(Dependencies.Library.Spek2.runnerJunit5)
+    testImplementation(libs.kotlin.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.spek2.dsl.jvm)
+    testRuntimeOnly(libs.kotlin.reflect)
+    testRuntimeOnly(libs.spek2.runner.junit5)
 }
 
 pluginBundle {
@@ -76,7 +76,7 @@ pluginBundle {
         "featureFlagPlugin" {
             displayName = "feature-flag-android"
             tags = listOf("android", "feature-flag", "feature-toggle")
-            version = ModuleConfig.version
+            version = libs.versions.feature.flag.get()
         }
     }
 }
@@ -84,9 +84,9 @@ pluginBundle {
 publishing {
     publications {
         maybeCreate("pluginMaven", MavenPublication::class.java).apply {
-            groupId = ModuleConfig.groupId
-            artifactId = ModuleConfig.pluginId
-            version = ModuleConfig.version
+            groupId = libs.feature.flag.get().module.group
+            artifactId = libs.feature.flag.get().module.name
+            version = libs.versions.feature.flag.get()
         }
     }
 }
