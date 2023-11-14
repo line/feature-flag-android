@@ -20,6 +20,7 @@ import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.api.BaseVariant
 import com.linecorp.android.featureflag.model.BuildVariant
 import org.gradle.api.Project
+import org.gradle.api.file.DirectoryProperty
 import java.io.File
 
 internal val Project.android: BaseExtension
@@ -34,9 +35,9 @@ internal fun File.resolvePackageName(packageName: String): File {
 }
 
 internal fun Project.getFeatureFlagOutputDir(variant: BaseVariant): File =
-    resolve(buildDir, "generated", "source", "featureFlag", variant.dirName)
+    resolve(layout.buildDirectory, "generated", "source", "featureFlag", variant.dirName)
 
-private fun resolve(file: File, vararg paths: String): File {
+private fun resolve(directory: DirectoryProperty, vararg paths: String): File {
     val combinedPath = paths.joinToString(File.separator)
-    return file.resolve(combinedPath)
+    return directory.file(combinedPath).get().asFile
 }
