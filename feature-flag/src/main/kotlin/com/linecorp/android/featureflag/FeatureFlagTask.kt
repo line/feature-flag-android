@@ -16,7 +16,6 @@
 
 package com.linecorp.android.featureflag
 
-import com.android.utils.FileUtils
 import com.linecorp.android.featureflag.loader.FeatureFlagFileTokenizer
 import com.linecorp.android.featureflag.loader.FeatureFlagOptionParser
 import com.linecorp.android.featureflag.loader.FeatureFlagSelectorEvaluator
@@ -90,7 +89,7 @@ abstract class FeatureFlagTask : DefaultTask() {
     @Suppress("unused")
     @TaskAction
     fun action() {
-        FileUtils.cleanOutputDir(outputDirectory)
+        outputDirectory.deleteRecursively()
         // Create mapping here instead of before task creation due to module configuration order.
         val moduleNameToFeatureFlagPackageMap = createModuleToFeatureFlagPackageMap(project)
         val buildEnvironment = BuildEnvironment(

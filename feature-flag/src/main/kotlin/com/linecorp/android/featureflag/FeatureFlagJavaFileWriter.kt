@@ -16,7 +16,6 @@
 
 package com.linecorp.android.featureflag
 
-import com.google.common.base.Charsets
 import com.linecorp.android.featureflag.model.FeatureFlagData
 import com.linecorp.android.featureflag.model.FeatureFlagOption
 import com.linecorp.android.featureflag.model.FlagLink
