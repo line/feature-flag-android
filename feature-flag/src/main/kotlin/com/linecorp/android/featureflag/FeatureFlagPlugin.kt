@@ -16,20 +16,20 @@
 
 package com.linecorp.android.featureflag
 
-import com.android.build.gradle.AppExtension
-import com.android.build.gradle.BaseExtension
-import com.android.build.gradle.LibraryExtension
-import com.android.build.gradle.api.BaseVariant
+import com.android.build.api.variant.ApplicationAndroidComponentsExtension
+import com.android.build.api.variant.ApplicationVariant
+import com.android.build.api.variant.LibraryAndroidComponentsExtension
+import com.android.build.api.variant.LibraryVariant
+import com.android.build.api.variant.Variant
+import com.android.build.gradle.AppPlugin
+import com.android.build.gradle.LibraryPlugin
 import com.linecorp.android.featureflag.model.BuildVariant
 import com.linecorp.android.featureflag.model.ForciblyOverriddenFeatureFlags
-import com.linecorp.android.featureflag.util.android
-import com.linecorp.android.featureflag.util.getFeatureFlagOutputDir
-import com.linecorp.android.featureflag.util.getProductFlavorSet
-import org.gradle.api.DomainObjectSet
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.register
 import java.io.File
 import java.util.Locale
 
@@ -40,68 +40,62 @@ import java.util.Locale
 class FeatureFlagPlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
-        // Note: We must call `registerJavaGeneratingTask` before applying `kotlin-android`.
-        if (project.plugins.hasPlugin("kotlin-android")) {
-            throw RuntimeException(
-                "`feature-flag` plugin must apply before apply `kotlin-android` plugin"
-            )
+        val extension = project.extensions.create<FeatureFlagExtension>("featureFlag", project)
+
+        project.plugins.withType(AppPlugin::class.java) {
+            project.extensions.getByType(ApplicationAndroidComponentsExtension::class.java)
+                .onVariants { variant ->
+                    installFeatureFlagGenerationTaskForApplication(project, variant, extension)
+                }
         }
-
-        val extension: FeatureFlagExtension =
-            project.extensions.create("featureFlag", project)
-
-        project.afterEvaluate { installFeatureFlagGenerationTask(extension) }
+        project.plugins.withType(LibraryPlugin::class.java) {
+            project.extensions.getByType(LibraryAndroidComponentsExtension::class.java)
+                .onVariants { variant ->
+                    installFeatureFlagGenerationTaskForLibrary(project, variant, extension)
+                }
+        }
     }
 
-    private fun Project.installFeatureFlagGenerationTask(
+    private fun installFeatureFlagGenerationTaskForApplication(
+        project: Project,
+        variant: ApplicationVariant,
         extension: FeatureFlagExtension
     ) {
-        val androidExtension = project.android as? BaseExtension
-            ?: throw RuntimeException("`feature-flag` plugin requires any of android plugin")
-
-        val applicationVersionName = extension.versionName.takeIf(String::isNotEmpty)
-            ?: androidExtension.defaultConfig.versionName
+        val versionName = extension.versionName.takeIf(String::isNotEmpty)
+            ?: variant.outputs.firstNotNullOfOrNull { it.versionName.orNull }
             ?: throw RuntimeException(
                 "Missing `featureFlag.versionName` or `android.defaultConfig.versionName` option"
             )
+        installFeatureFlagGenerationTask(project, variant, extension, versionName)
+    }
 
+    private fun installFeatureFlagGenerationTaskForLibrary(
+        project: Project,
+        variant: LibraryVariant,
+        extension: FeatureFlagExtension
+    ) {
+        val versionName = extension.versionName.takeIf(String::isNotEmpty)
+            ?: throw RuntimeException("Missing `featureFlag.versionName` option")
+        installFeatureFlagGenerationTask(project, variant, extension, versionName)
+    }
+
+    private fun installFeatureFlagGenerationTask(
+        project: Project,
+        variant: Variant,
+        extension: FeatureFlagExtension,
+        versionName: String
+    ) {
         val localSourceFile = extension.sourceFile.takeIf(File::exists)
             ?: throw RuntimeException("Missing `sourceFile` option or file isn't exist")
 
         val localPackageName = extension.packageName.takeIf(String::isNotEmpty)
-            ?: androidExtension.namespace
+            ?: variant.namespace.orNull
             ?: throw RuntimeException(
                 "Missing `featureFlag.packageName` or `android.namespace` option"
             )
 
-        // Here, we call `DefaultDomainObjectSet.all` instead of standard iterator extensions.
-        // For more details, refer to `AppExtension.getApplicationVariants()`
-        androidExtension.getVariants()?.all {
-            installFeatureFlagGenerationTask(
-                this,
-                extension,
-                applicationVersionName,
-                localSourceFile,
-                localPackageName
-            )
-        }
-    }
-
-    private fun BaseExtension.getVariants(): DomainObjectSet<out BaseVariant>? = when (this) {
-        is AppExtension -> applicationVariants
-        is LibraryExtension -> libraryVariants
-        else -> null
-    }
-
-    private fun Project.installFeatureFlagGenerationTask(
-        variant: BaseVariant,
-        extension: FeatureFlagExtension,
-        versionName: String,
-        featureFlagSourceFile: File,
-        applicationPackageName: String?
-    ) {
         val currentBuildVariant = BuildVariant(
-            BuildVariant.Element.BuildType(variant.buildType.name),
+            BuildVariant.Element.BuildType(checkNotNull(variant.buildType)),
             variant.getProductFlavorSet()
         )
 
@@ -109,19 +103,18 @@ class FeatureFlagPlugin : Plugin<Project> {
             if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
         }
         val taskName = "generate${capitalizedVariantName}FeatureFlag"
-        val taskProvider = tasks.register(taskName, FeatureFlagTask::class.java) {
+        val taskProvider = project.tasks.register<FeatureFlagTask>(taskName) {
             markNotCompatibleWithConfigurationCache(this)
-            sourceFile = featureFlagSourceFile
-            outputDirectory = getFeatureFlagOutputDir(variant)
-            packageName = applicationPackageName ?: variant.applicationId
+            sourceFile = localSourceFile
+            packageName = localPackageName
             phaseMap = getPhaseMap(extension.phases, currentBuildVariant)
             isReleaseVariant = extension.releasePhaseSet.any(currentBuildVariant::includes)
             applicationVersionName = versionName
             currentUserName = System.getProperty("user.name")
             forciblyOverriddenFeatureFlags = ForciblyOverriddenFeatureFlags.parse(project)
         }
-        val task = taskProvider.get()
-        variant.registerJavaGeneratingTask(task, task.outputDirectory)
+        variant.sources.java
+            ?.addGeneratedSourceDirectory(taskProvider, FeatureFlagTask::outputDirectory)
     }
 
     internal fun getPhaseMap(
@@ -144,4 +137,7 @@ class FeatureFlagPlugin : Plugin<Project> {
             // pass
         }
     }
+
+    private fun Variant.getProductFlavorSet(): Set<BuildVariant.Element.Flavor> =
+        productFlavors.map { BuildVariant.Element.Flavor(it.second) }.toSet()
 }
