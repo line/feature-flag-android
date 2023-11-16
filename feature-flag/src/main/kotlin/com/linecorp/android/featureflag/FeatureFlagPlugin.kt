@@ -27,7 +27,6 @@ import com.linecorp.android.featureflag.model.BuildVariant
 import com.linecorp.android.featureflag.model.ForciblyOverriddenFeatureFlags
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.Task
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.register
 import java.io.File
@@ -104,7 +103,9 @@ class FeatureFlagPlugin : Plugin<Project> {
         }
         val taskName = "generate${capitalizedVariantName}FeatureFlag"
         val taskProvider = project.tasks.register<FeatureFlagTask>(taskName) {
-            markNotCompatibleWithConfigurationCache(this)
+            notCompatibleWithConfigurationCache(
+                "Requires Project instance to resolve build variants during task execution."
+            )
             sourceFile = localSourceFile
             packageName = localPackageName
             phaseMap = getPhaseMap(extension.phases, currentBuildVariant)
@@ -121,22 +122,6 @@ class FeatureFlagPlugin : Plugin<Project> {
         phases: Map<String, Set<BuildVariant.Element>>,
         currentBuildVariant: BuildVariant
     ): Map<String, Boolean> = phases.mapValues { it.value.any(currentBuildVariant::includes) }
-
-    private fun markNotCompatibleWithConfigurationCache(task: Task) {
-        try {
-            // Configuration cache method incubating in Gradle 7.4
-            val method = Task::class.java.getDeclaredMethod(
-                "notCompatibleWithConfigurationCache",
-                java.lang.String::class.java
-            )
-            method.invoke(
-                task,
-                "Requires Project instance to resolve build variants during task execution."
-            )
-        } catch (ex: NoSuchMethodException) {
-            // pass
-        }
-    }
 
     private fun Variant.getProductFlavorSet(): Set<BuildVariant.Element.Flavor> =
         productFlavors.map { BuildVariant.Element.Flavor(it.second) }.toSet()
