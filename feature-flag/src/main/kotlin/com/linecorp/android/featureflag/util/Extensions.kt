@@ -22,4 +22,3 @@ internal fun File.resolvePackageName(packageName: String): File {
     val packagePath = packageName.replace('.', File.separatorChar)
     return resolve(packagePath)
 }
-
