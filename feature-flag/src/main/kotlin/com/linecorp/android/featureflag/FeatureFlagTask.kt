@@ -26,7 +26,6 @@ import com.linecorp.android.featureflag.model.FeatureFlagData
 import com.linecorp.android.featureflag.model.FeatureFlagProperties
 import com.linecorp.android.featureflag.model.ForciblyOverriddenFeatureFlags
 import org.gradle.api.DefaultTask
-import org.gradle.api.Project
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
@@ -35,7 +34,6 @@ import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
-import org.gradle.kotlin.dsl.findByType
 import java.io.File
 import com.github.zafarkhaja.semver.Version
 import org.gradle.api.file.DirectoryProperty
@@ -92,8 +90,6 @@ abstract class FeatureFlagTask : DefaultTask() {
     fun action() {
         val outputDirectoryFile = outputDirectory.asFile.get()
         outputDirectoryFile.deleteRecursively()
-        // Create mapping here instead of before task creation due to module configuration order.
-        val moduleNameToFeatureFlagPackageMap = createModuleToFeatureFlagPackageMap(project)
         val buildEnvironment = BuildEnvironment(
             phaseMap,
             Version.valueOf(applicationVersionName),
@@ -112,24 +108,10 @@ abstract class FeatureFlagTask : DefaultTask() {
             outputDirectoryFile,
             packageName,
             featureFlags,
-            isReleaseVariant,
-            moduleNameToFeatureFlagPackageMap
+            isReleaseVariant
         )
         writer.write()
     }
-
-    private fun createModuleToFeatureFlagPackageMap(project: Project): Map<String, String> =
-        project.rootProject.subprojects.mapNotNull(::getModuleToFeatureFlagPackagePairOrNull)
-            .toMap()
-
-    private fun getModuleToFeatureFlagPackagePairOrNull(project: Project): Pair<String, String>? {
-        val moduleName = project.path.substring(1) // To remove the leading ":"
-        val packageName = getFeatureFlagPackageOrNull(project) ?: return null
-        return moduleName to packageName
-    }
-
-    private fun getFeatureFlagPackageOrNull(project: Project): String? =
-        project.extensions.findByType<FeatureFlagExtension>()?.packageName
 
     private fun convertToFeatureFlagData(
         entry: FeatureFlagProperties.Entry,

@@ -32,8 +32,7 @@ internal class FeatureFlagJavaFileWriter(
     private val outputDirectory: File,
     private val packageName: String,
     private val featureFlags: List<FeatureFlagData>,
-    private val isReleasePhase: Boolean,
-    private val moduleNameToFeatureFlagPackageMap: Map<String, String>
+    private val isReleasePhase: Boolean
 ) {
 
     fun write() {
@@ -267,13 +266,10 @@ internal class FeatureFlagJavaFileWriter(
         }
 
     private fun convertLinkToJavaLiteralValue(link: FlagLink): String {
-        if (link.moduleName.isEmpty()) {
+        if (link.packageName.isEmpty()) {
             return link.flagName
         }
-        val packageName = checkNotNull(moduleNameToFeatureFlagPackageMap[link.moduleName]) {
-            "Missing feature flag plugin on module ${link.moduleName}."
-        }
-        return "$packageName.FeatureFlag.${link.flagName}"
+        return "$${link.packageName}.FeatureFlag.${link.flagName}"
     }
 
     private fun wrapLiteral(literal: String): String = "Boolean.valueOf($literal)"

@@ -18,7 +18,8 @@ package com.linecorp.android.featureflag.model
 
 /**
  * A flag value element to refer to another flag value to decide enabled or not.
- * If a flag has a link with empty [moduleName], it means the linked and linking flags are in the
+ *
+ * If a flag has a link with empty [packageName], it means the linked and linking flags are in the
  * same module.
  */
-internal data class FlagLink(val moduleName: String, val flagName: String)
+internal data class FlagLink(val packageName: String, val flagName: String)
