@@ -45,7 +45,7 @@ We may define flag phases as follows, for example.
 - `DEBUG`: Enabled when the build type is `debug`.
 - `RELEASE`: Enabled when the build type is `debug` or `release`.
 
-The following code is actuall configuration example.
+The following code is actual configuration example.
 
 ```build.gradle.kts
 featureFlag {
@@ -62,7 +62,7 @@ featureFlag {
 }
 ```
 
-Definition of each property is as follows. 
+Definition of each property is as follows.
 
 - `sourceFiles`: A set of feature flag property `File`s to read.
 - `packageName`: (Optional) A package name of generated `FeatureFlag` class. If this is not set, packageName will be set from `namespace` of Android Gradle Plugin
@@ -90,7 +90,7 @@ FLAG_4 = packageName:FLAG_A # Delegates flag enability to `FLAG_A` in module whi
 OVERRIDABLE FLAG_5 = DEBUG  # Makes the flag modifiable at runtime.
 PRIVATE FLAG_6 = DEBUG      # Makes the flag not accessible from a flag property file in another module.
 LITERALIZE FLAG_7 = DEBUG   # Try to use a primitive boolean as the flag value.
- 
+
 # Property combination
 # Enabled if either of the following conditions satisfies
 # 1. Built in `DEBUG` phase.
@@ -143,4 +143,4 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ```
 
-See [LICENSE](LICENSE) for more detail. 
+See [LICENSE](LICENSE) for more detail.
