@@ -37,6 +37,7 @@ import org.gradle.api.tasks.TaskAction
 import java.io.File
 import com.github.zafarkhaja.semver.Version
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.provider.Property
 
 /**
  * A gradle task to generate feature flag Java file for the current module.
@@ -52,7 +53,7 @@ abstract class FeatureFlagTask : DefaultTask() {
     internal abstract val outputDirectory: DirectoryProperty
 
     @get:Input
-    internal abstract var packageName: String
+    internal abstract val packageName: Property<String>
 
     @get:Internal
     internal abstract var phaseMap: Map<String, Boolean>
@@ -106,7 +107,7 @@ abstract class FeatureFlagTask : DefaultTask() {
         }
         val writer = FeatureFlagJavaFileWriter(
             outputDirectoryFile,
-            packageName,
+            packageName.get(),
             featureFlags,
             isReleaseVariant
         )
