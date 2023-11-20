@@ -29,7 +29,6 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.register
-import java.io.File
 import java.util.Locale
 
 /**
@@ -84,9 +83,6 @@ class FeatureFlagPlugin : Plugin<Project> {
         extension: FeatureFlagExtension,
         versionName: String
     ) {
-        val localSourceFile = extension.sourceFile.takeIf(File::exists)
-            ?: throw RuntimeException("Missing `sourceFile` option or file isn't exist")
-
         val packageNameProvider = extension.packageName.takeIf(String::isNotEmpty)
             ?.let { packageName -> project.provider { packageName } }
             ?: variant.namespace
@@ -107,7 +103,7 @@ class FeatureFlagPlugin : Plugin<Project> {
             notCompatibleWithConfigurationCache(
                 "Requires Project instance to resolve build variants during task execution."
             )
-            sourceFile = localSourceFile
+            sourceFiles = extension.sourceFiles
             packageName.set(packageNameProvider)
             phaseMap = getPhaseMap(extension.phases, currentBuildVariant)
             isReleaseVariant = extension.releasePhaseSet.any(currentBuildVariant::includes)

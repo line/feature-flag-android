@@ -49,7 +49,10 @@ The following code is actuall configuration example.
 
 ```build.gradle.kts
 featureFlag {
-    sourceFile = file("FEATURE_FLAG")
+    sourceFiles.setFrom(file("FEATURE_FLAG"))
+    // You can also specify multiple files as follows.
+    // sourceFiles.setFrom(files("FEATURE_FLAG", "FEATURE_FLAG_2"))
+
     packageName = "com.example.featureflag"
     phases = mapOf(
         "DEBUG" to setOf(buildType("debug")),
@@ -61,7 +64,7 @@ featureFlag {
 
 Definition of each property is as follows. 
 
-- `sourceFile`: A feature flag property `File` to read.
+- `sourceFiles`: A set of feature flag property `File`s to read.
 - `packageName`: (Optional) A package name of generated `FeatureFlag` class. If this is not set, packageName will be set from `namespace` of Android Gradle Plugin
 - `phases`: A list of pairs of phase and the corresponding build variants.
 - `releasePhaseSet`: Build variants to allow using primitive boolean values as flag values. An optimizer may inline flag values with the variants. `buildType` or `flavor` can be specified as a variant.

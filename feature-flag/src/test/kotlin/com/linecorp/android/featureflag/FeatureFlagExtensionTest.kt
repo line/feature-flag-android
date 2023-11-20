@@ -20,6 +20,7 @@ import com.linecorp.android.featureflag.model.BuildVariant
 import io.mockk.every
 import io.mockk.mockk
 import org.gradle.api.Project
+import org.gradle.api.file.ConfigurableFileCollection
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 import java.io.File
@@ -27,8 +28,10 @@ import kotlin.test.assertEquals
 
 object FeatureFlagExtensionTest : Spek({
     describe("public functions return correct values") {
+        val mockedSourceFiles = mockk<ConfigurableFileCollection>()
         val project: Project = mockk {
             every { rootDir } returns File("/tmp/")
+            every { files(File("/tmp/FEATURE_FLAG")) } returns mockedSourceFiles
         }
         val extension by memoized {
             FeatureFlagExtension(
