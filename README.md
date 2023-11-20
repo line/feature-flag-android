@@ -81,7 +81,7 @@ An example is as follows.
 FLAG_1 = DEBUG              # Enabled when build in `DEBUG` phase.
 FLAG_2 = 1.2.0~             # Enabled when module version is `1.2.0` or later.
 FLAG_3 = @user              # Enabled if the username is `user`.
-FLAG_4 = submodule:FLAG_A   # Delegates flag enability to `FLAG_A` in module `submodule`.
+FLAG_4 = packageName:FLAG_A # Delegates flag enability to `FLAG_A` in module which has `packageName` as packageName property.
 
 # Property with options
 OVERRIDABLE FLAG_5 = DEBUG  # Makes the flag modifiable at runtime.

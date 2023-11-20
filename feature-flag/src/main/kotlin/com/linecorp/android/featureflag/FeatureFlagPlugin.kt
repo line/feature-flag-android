@@ -87,8 +87,9 @@ class FeatureFlagPlugin : Plugin<Project> {
         val localSourceFile = extension.sourceFile.takeIf(File::exists)
             ?: throw RuntimeException("Missing `sourceFile` option or file isn't exist")
 
-        val localPackageName = extension.packageName.takeIf(String::isNotEmpty)
-            ?: variant.namespace.orNull
+        val packageNameProvider = extension.packageName.takeIf(String::isNotEmpty)
+            ?.let { packageName -> project.provider { packageName } }
+            ?: variant.namespace
             ?: throw RuntimeException(
                 "Missing `featureFlag.packageName` or `android.namespace` option"
             )
@@ -107,7 +108,7 @@ class FeatureFlagPlugin : Plugin<Project> {
                 "Requires Project instance to resolve build variants during task execution."
             )
             sourceFile = localSourceFile
-            packageName = localPackageName
+            packageName.set(packageNameProvider)
             phaseMap = getPhaseMap(extension.phases, currentBuildVariant)
             isReleaseVariant = extension.releasePhaseSet.any(currentBuildVariant::includes)
             applicationVersionName = versionName
