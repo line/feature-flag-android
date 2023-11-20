@@ -16,6 +16,7 @@
 
 package com.linecorp.android.featureflag.loader
 
+import com.github.zafarkhaja.semver.Version
 import com.linecorp.android.featureflag.model.BuildEnvironment
 import com.linecorp.android.featureflag.model.DisjunctionNormalForm.Conjunction
 import com.linecorp.android.featureflag.model.DisjunctionNormalForm.Disjunction
@@ -23,7 +24,6 @@ import com.linecorp.android.featureflag.model.FeatureFlagAppliedElement
 import com.linecorp.android.featureflag.model.FeatureFlagAppliedElement.Constant
 import com.linecorp.android.featureflag.model.FeatureFlagAppliedElement.Variable
 import com.linecorp.android.featureflag.model.FeatureFlagElement
-import org.gradle.util.VersionNumber
 
 /**
  * An evaluator of [FeatureFlagElement]s in [Disjunction].
@@ -97,6 +97,6 @@ internal object FeatureFlagSelectorEvaluator {
 
     private fun isEnabledVersion(
         element: FeatureFlagElement.Version,
-        applicationVersion: VersionNumber
-    ): Boolean = VersionNumber.parse(element.version) <= applicationVersion
+        applicationVersion: Version
+    ): Boolean = Version.valueOf(element.version) <= applicationVersion
 }
