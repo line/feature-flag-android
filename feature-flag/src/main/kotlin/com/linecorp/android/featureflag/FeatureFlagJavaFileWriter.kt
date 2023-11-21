@@ -269,7 +269,7 @@ internal class FeatureFlagJavaFileWriter(
         if (link.packageName.isEmpty()) {
             return link.flagName
         }
-        return "$${link.packageName}.FeatureFlag.${link.flagName}"
+        return "${link.packageName}.FeatureFlag.${link.flagName}"
     }
 
     private fun wrapLiteral(literal: String): String = "Boolean.valueOf($literal)"
