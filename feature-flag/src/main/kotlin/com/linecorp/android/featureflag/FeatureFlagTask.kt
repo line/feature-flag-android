@@ -23,20 +23,20 @@ import com.linecorp.android.featureflag.loader.FeatureFlagSelectorParser
 import com.linecorp.android.featureflag.loader.FeatureFlagValueOptimizer
 import com.linecorp.android.featureflag.model.BuildEnvironment
 import com.linecorp.android.featureflag.model.FeatureFlagData
-import com.linecorp.android.featureflag.model.FeatureFlagProperties
 import com.linecorp.android.featureflag.model.ForciblyOverriddenFeatureFlags
 import org.gradle.api.DefaultTask
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.FileCollection
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
-import java.io.File
 import com.github.zafarkhaja.semver.Version
-import org.gradle.api.file.DirectoryProperty
+import com.linecorp.android.featureflag.model.FeatureFlagEntry
 import org.gradle.api.provider.Property
 
 /**
@@ -45,9 +45,9 @@ import org.gradle.api.provider.Property
 @CacheableTask
 abstract class FeatureFlagTask : DefaultTask() {
 
-    @get:InputFile
+    @get:InputFiles
     @get:PathSensitive(PathSensitivity.RELATIVE)
-    internal abstract var sourceFile: File
+    internal abstract var sourceFiles: FileCollection
 
     @get:OutputDirectory
     internal abstract val outputDirectory: DirectoryProperty
@@ -96,8 +96,10 @@ abstract class FeatureFlagTask : DefaultTask() {
             Version.valueOf(applicationVersionName),
             currentUserName
         )
-        val properties = sourceFile.useLines(block = FeatureFlagFileTokenizer::parse)
-        val featureFlags = properties.entries.map {
+        val entries = sourceFiles
+            .map { it.useLines(block = FeatureFlagFileTokenizer::parse) }
+            .flatten()
+        val featureFlags = entries.map {
             convertToFeatureFlagData(
                 it,
                 buildEnvironment,
@@ -115,7 +117,7 @@ abstract class FeatureFlagTask : DefaultTask() {
     }
 
     private fun convertToFeatureFlagData(
-        entry: FeatureFlagProperties.Entry,
+        entry: FeatureFlagEntry,
         buildEnvironment: BuildEnvironment,
         forciblyEnabledFlags: Set<String>,
         forciblyDisabledFlags: Set<String>

@@ -18,7 +18,7 @@ package com.linecorp.android.featureflag
 
 import com.linecorp.android.featureflag.model.BuildVariant
 import org.gradle.api.Project
-import java.io.File
+import org.gradle.api.file.ConfigurableFileCollection
 
 /**
  * A Gradle extension to provide a feature flag file.
@@ -26,7 +26,8 @@ import java.io.File
  * **Note**: Keep this an open class because a proxy class is created by the gradle system.
  */
 open class FeatureFlagExtension(project: Project) {
-    var sourceFile: File = project.rootDir.resolve(DEFAULT_FEATURE_FLAG_PROPERTY_FILE_NAME)
+    val sourceFiles: ConfigurableFileCollection =
+        project.files(project.rootDir.resolve(DEFAULT_FEATURE_FLAG_PROPERTY_FILE_NAME))
     var phases: Map<String, Set<BuildVariant.Element>> = mapOf()
     var releasePhaseSet: Set<BuildVariant.Element> = setOf()
     var packageName: String = ""

@@ -16,8 +16,7 @@
 
 package com.linecorp.android.featureflag.loader
 
-import com.linecorp.android.featureflag.model.FeatureFlagProperties
-import com.linecorp.android.featureflag.model.FeatureFlagProperties.Entry
+import com.linecorp.android.featureflag.model.FeatureFlagEntry
 import com.linecorp.android.featureflag.utils.assertFailureMessage
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
@@ -37,46 +36,43 @@ object FeatureFlagFileTokenizerTest : Spek({
         return File(url.toURI()).bufferedReader().lineSequence()
     }
 
-    fun createFeatureFlagProperties(vararg entries: Entry): FeatureFlagProperties =
-        FeatureFlagProperties(entries.toList())
-
     describe("Parsed result is correct") {
         it("with options") {
             assertEquals(
-                createFeatureFlagProperties(
-                    Entry("FLAG_1", "VALUE", "OPTION"),
-                    Entry("FLAG_2", "VALUE", "OPTION"),
-                    Entry("FLAG_3", "VALUE", "OPTION1 OPTION2"),
-                    Entry("FLAG_4", "VALUE", "OPTION1  OPTION2")
+                listOf(
+                    FeatureFlagEntry("FLAG_1", "VALUE", "OPTION"),
+                    FeatureFlagEntry("FLAG_2", "VALUE", "OPTION"),
+                    FeatureFlagEntry("FLAG_3", "VALUE", "OPTION1 OPTION2"),
+                    FeatureFlagEntry("FLAG_4", "VALUE", "OPTION1  OPTION2")
                 ),
                 FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_VALID_OPTION"))
             )
         }
         it("with name") {
             assertEquals(
-                createFeatureFlagProperties(
-                    Entry("FLAG_1", "VALUE", ""),
-                    Entry("FLAG_2", "VALUE", ""),
-                    Entry("FLAG_3", "VALUE", "")
+                listOf(
+                    FeatureFlagEntry("FLAG_1", "VALUE", ""),
+                    FeatureFlagEntry("FLAG_2", "VALUE", ""),
+                    FeatureFlagEntry("FLAG_3", "VALUE", "")
                 ),
                 FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_VALID_NAME"))
             )
         }
         it("with value") {
             assertEquals(
-                createFeatureFlagProperties(
-                    Entry("FLAG_1", "VALUE", ""),
-                    Entry("FLAG_2", "VALUE", ""),
-                    Entry("FLAG_3", "VALUE VALUE", ""),
-                    Entry("FLAG_4", "VALUE", ""),
-                    Entry("FLAG_5", "VALUE=VALUE", "")
+                listOf(
+                    FeatureFlagEntry("FLAG_1", "VALUE", ""),
+                    FeatureFlagEntry("FLAG_2", "VALUE", ""),
+                    FeatureFlagEntry("FLAG_3", "VALUE VALUE", ""),
+                    FeatureFlagEntry("FLAG_4", "VALUE", ""),
+                    FeatureFlagEntry("FLAG_5", "VALUE=VALUE", "")
                 ),
                 FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_VALID_VALUE"))
             )
         }
         it("with empty") {
             assertEquals(
-                createFeatureFlagProperties(),
+                emptyList(),
                 FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_VALID_EMPTY"))
             )
         }

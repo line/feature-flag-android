@@ -17,7 +17,7 @@
 package com.linecorp.android.featureflag.loader
 
 import com.linecorp.android.featureflag.loader.FeatureFlagFileTokenizer.parse
-import com.linecorp.android.featureflag.model.FeatureFlagProperties
+import com.linecorp.android.featureflag.model.FeatureFlagEntry
 
 /**
  * A string tokenizer for raw string lines of feature flag properties.
@@ -48,26 +48,22 @@ internal object FeatureFlagFileTokenizer {
      *
      * If the given sequence has a malformed line, this throws [IllegalArgumentException].
      */
-    fun parse(lines: Sequence<String>): FeatureFlagProperties =
-        FeatureFlagProperties(loadRawFeatureFlagEntries(lines))
-
-    private fun loadRawFeatureFlagEntries(
-        lines: Sequence<String>
-    ): List<FeatureFlagProperties.Entry> = lines
-        .map(::trimComment)
-        .filterNot(String::isBlank)
-        .map(::parseToRawFeatureFlagEntry)
-        .toList()
+    fun parse(lines: Sequence<String>): List<FeatureFlagEntry> =
+        lines
+            .map(::trimComment)
+            .filterNot(String::isBlank)
+            .map(::parseToRawFeatureFlagEntry)
+            .toList()
 
     private fun trimComment(line: String): String = line.split(COMMENT_MARKER)[0]
 
-    private fun parseToRawFeatureFlagEntry(line: String): FeatureFlagProperties.Entry {
+    private fun parseToRawFeatureFlagEntry(line: String): FeatureFlagEntry {
         val groupValues = FLAG_ENTRY_REGEX.find(line)?.groupValues
 
         require(groupValues != null && groupValues.size == 4) { "Couldn't parse a line: $line" }
         check(groupValues[3].isNotBlank()) { "Value mustn't be empty: $line" }
 
-        return FeatureFlagProperties.Entry(
+        return FeatureFlagEntry(
             name = groupValues[2].trim(),
             value = groupValues[3].trim(),
             option = groupValues[1].trim()

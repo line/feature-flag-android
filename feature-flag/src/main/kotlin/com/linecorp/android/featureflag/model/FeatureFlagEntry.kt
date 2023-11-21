@@ -17,11 +17,7 @@
 package com.linecorp.android.featureflag.model
 
 /**
- * A list of feature flag entries, where each entry is a tuple of raw strings: a feature name
- * string, value string, and option string.
+ * A entry of feature flag which is a tuple of raw strings: a feature name string, value string,
+ * and option string.
  */
-internal data class FeatureFlagProperties(
-    val entries: List<Entry>
-) {
-    data class Entry(val name: String, val value: String, val option: String)
-}
+internal data class FeatureFlagEntry(val name: String, val value: String, val option: String)
