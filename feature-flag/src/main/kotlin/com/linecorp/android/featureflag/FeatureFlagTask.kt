@@ -37,6 +37,7 @@ import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
 import com.github.zafarkhaja.semver.Version
 import com.linecorp.android.featureflag.model.FeatureFlagEntry
+import org.gradle.api.GradleException
 import org.gradle.api.provider.Property
 
 /**
@@ -99,6 +100,16 @@ abstract class FeatureFlagTask : DefaultTask() {
         val entries = sourceFiles
             .map { it.useLines(block = FeatureFlagFileTokenizer::parse) }
             .flatten()
+        val duplicatedFeatureFlagNameList = entries.groupingBy { it.name }
+            .eachCount()
+            .filter { it.value > 1 }
+            .map { it.key }
+        if (duplicatedFeatureFlagNameList.isNotEmpty()) {
+            val errorMessage = duplicatedFeatureFlagNameList.joinToString(
+                prefix = "Duplicated feature flag definition found: "
+            )
+            throw GradleException(errorMessage)
+        }
         val featureFlags = entries.map {
             convertToFeatureFlagData(
                 it,
