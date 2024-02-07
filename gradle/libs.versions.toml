@@ -1,6 +1,6 @@
 [versions]
 
-feature-flag = "3.0.0"
+feature-flag = "3.1.0"
 
 # https://developer.android.com/studio/releases/gradle-plugin
 android-gradle = "8.1.3"
