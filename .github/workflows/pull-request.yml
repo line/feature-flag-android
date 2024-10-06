@@ -8,10 +8,12 @@ jobs:
     steps:
       - name: Fetch Sources
         uses: actions/checkout@v4
-      
+        with:
+          fetch-depth: 0
+
       - name: Validate Gradle Wrapper
         uses: gradle/actions/wrapper-validation@v3
-      
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
