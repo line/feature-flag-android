@@ -3,7 +3,27 @@ name: Run tests on a pull request
 on: pull_request
 
 jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      gradle-plugin: ${{ steps.filter.outputs.gradle-plugin }}
+      intellij-plugin: ${{ steps.filter.outputs.intellij-plugin }}
+    steps:
+    - uses: dorny/paths-filter@v3
+      id: filter
+      with:
+        filters: |
+          gradle-plugin:
+            - '!intellij-plugin/**'
+          intellij-plugin:
+            - 'intellij-plugin/**'
+            - 'qodana.yml'
+
   build-gradle-plugin:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.gradle-plugin == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Sources
@@ -38,3 +58,61 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JOB_STATUS: ${{ job.status }}
         run: bundle exec danger --remove-previous-comments --fail-on-errors=true
+
+  build-intellij-plugin:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.intellij-plugin == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Maximize Build Space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: false
+          large-packages: false
+
+      - name: Fetch Sources
+        uses: actions/checkout@v4
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+      
+      - name: Setup Plugin Verifier IDEs Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.pluginVerifier/ides
+          key: plugin-verifier-${{ hashFiles('intellij-plugin/build/listProductsReleases.txt') }}
+
+      - name: Run Tests
+        run: |
+          cd intellij-plugin
+          ./gradlew :check verifyPlugin -Dplugin.verifier.home.dir=~/.pluginVerifier/ides
+
+      - name: Collect Tests Result
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: tests-result
+          path: ${{ github.workspace }}/intellij-plugin/build/reports/tests
+
+      - name: Collect Kover Report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: kover-result
+          path: ${{ github.workspace }}/intellij-plugin/build/reports/kover/report.xml
+      
+      - name: Collect Plugin Verifier Result
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: pluginVerifier-result
+          path: ${{ github.workspace }}/intellij-plugin/build/reports/pluginVerifier

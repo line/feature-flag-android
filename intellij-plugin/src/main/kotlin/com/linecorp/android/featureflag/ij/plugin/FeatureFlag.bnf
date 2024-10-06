@@ -1,0 +1,54 @@
+/*
+ * Copyright 2024 LY Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+{
+  parserClass="com.linecorp.android.featureflag.ij.plugin.parser.FeatureFlagParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="FeatureFlag"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.linecorp.android.featureflag.ij.plugin.psi"
+  psiImplPackage="com.linecorp.android.featureflag.ij.plugin.psi.impl"
+
+  elementTypeHolderClass="com.linecorp.android.featureflag.ij.plugin.psi.FeatureFlagTypes"
+  elementTypeClass="com.linecorp.android.featureflag.ij.plugin.psi.FeatureFlagElementType"
+  tokenTypeClass="com.linecorp.android.featureflag.ij.plugin.psi.FeatureFlagTokenType"
+
+  psiImplUtilClass="com.linecorp.android.featureflag.ij.plugin.psi.impl.FeatureFlagPsiImplUtil"
+}
+
+featureFlagFile ::= item_*
+
+private item_ ::= (property|COMMENT|CRLF)
+
+property ::= [modifier] KEY SEPARATOR value COMMENT?
+{
+  mixin="com.linecorp.android.featureflag.ij.plugin.psi.impl.FeatureFlagNamedElementImpl"
+  implements="com.linecorp.android.featureflag.ij.plugin.psi.FeatureFlagNamedElement"
+  methods=[getKey getName setName getNameIdentifier getPresentation]
+}
+
+modifier ::= MODIFIER_OVERRIDABLE | MODIFIER_PRIVATE | MODIFIER_LITERALIZE
+{
+  methods=[getModifierType]
+}
+
+value ::= (entry (COMMA | AND))* entry
+
+entry ::= (VALUE_VERSION | VALUE_USERNAME | valueReference | VALUE_STRING)
+
+valueReference ::= VALUE_REFERENCE_PACKAGE COLON VALUE_REFERENCE_NAME

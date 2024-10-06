@@ -1,0 +1,61 @@
+<idea-plugin>
+    <id>com.linecorp.android.featureflag.ij.plugin</id>
+    <name>FeatureFlag Android Support</name>
+    <vendor>LY Corporation</vendor>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.java</depends>
+    <depends
+            optional="true"
+            config-file="kotlin.xml">
+        org.jetbrains.kotlin
+    </depends>
+
+    <resource-bundle>messages.FeatureFlagBundle</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType
+                name="FeatureFlag File"
+                implementationClass="com.linecorp.android.featureflag.ij.plugin.FeatureFlagFileType"
+                fieldName="INSTANCE"
+                language="FeatureFlag"
+                extensions="ff"
+                hashBangs="feature-flag"
+                patterns="FEATURE_FLAG*"/>
+
+        <iconMapper mappingFile="FeatureFlagIconMappings.json"/>
+
+        <lang.parserDefinition
+                language="FeatureFlag"
+                implementationClass="com.linecorp.android.featureflag.ij.plugin.parser.FeatureFlagParserDefinition"/>
+
+        <lang.syntaxHighlighterFactory
+                language="FeatureFlag"
+                implementationClass="com.linecorp.android.featureflag.ij.plugin.syntaxhighlight.FeatureFlagSyntaxHighlighterFactory"/>
+
+        <codeInsight.lineMarkerProvider
+                language="JAVA"
+                implementationClass="com.linecorp.android.featureflag.ij.plugin.linemarker.FeatureFlagJavaLineMarkerProvider"/>
+
+        <gotoSymbolContributor
+                implementation="com.linecorp.android.featureflag.ij.plugin.gotosymbol.FeatureFlagChooseByNameContributor"/>
+
+        <iconProvider
+                implementation="com.linecorp.android.featureflag.ij.plugin.icon.FeatureFlagPropertyIconProvider"/>
+
+        <lang.commenter
+                language="FeatureFlag"
+                implementationClass="com.linecorp.android.featureflag.ij.plugin.commenter.FeatureFlagCommenter"/>
+
+        <lang.documentationProvider
+                language="JAVA"
+                order="FIRST"
+                implementationClass="com.linecorp.android.featureflag.ij.plugin.documentation.FeatureFlagDocumentationProvider"/>
+
+        <lang.psiStructureViewFactory
+                language="FeatureFlag"
+                implementationClass="com.linecorp.android.featureflag.ij.plugin.structureview.FeatureFlagStructureViewFactory"/>
+
+        <navbar implementation="com.linecorp.android.featureflag.ij.plugin.navigationbar.FeatureFlagStructureAwareNavbar"/>
+    </extensions>
+</idea-plugin>

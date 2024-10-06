@@ -1,0 +1,19 @@
+# Simple property
+FLAG_1 = DEBUG              # Enabled when build in `DEBUG` phase.
+FLAG_2 = 1.2.0~             # Enabled when module version is `1.2.0` or later.
+FLAG_3 = @user              # Enabled if the username is `user`.
+FLAG_4 = packageName:FLAG_A # Delegates flag enability to `FLAG_A` in module which has `packageName` as packageName property.
+
+# Property with options
+OVERRIDABLE FLAG_5 = DEBUG  # Makes the flag modifiable at runtime.
+PRIVATE FLAG_6 = DEBUG      # Makes the flag not accessible from a flag property file in another module.
+LITERALIZE FLAG_7 = DEBUG   # Try to use a primitive boolean as the flag value.
+
+# Property combination
+# Enabled if either of the following conditions satisfies
+# 1. Built in `DEBUG` phase.
+# 2. Built in `RELEASE` phase and version `1.3.0` or later.
+FLAG_8 = DEBUG, RELEASE & 1.3.0~
+
+PRIVATE FLAG_9_USERS = @user1, @user2  # Enabled if built by `user1` or `user2`
+FLAG_9 = FLAG_9_USERS & DEBUG          # Enabled if `FLAG_9_USERS` is enabled and built in `DEBUG` phase.
