@@ -1,4 +1,4 @@
-name: Publish to Gradle Plugins Portal
+name: Publish Gradle plugin to Gradle Plugins Portal
 
 on:
   workflow_dispatch:

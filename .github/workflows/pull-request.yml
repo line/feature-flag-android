@@ -3,7 +3,7 @@ name: Run tests on a pull request
 on: pull_request
 
 jobs:
-  build:
+  build-gradle-plugin:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
