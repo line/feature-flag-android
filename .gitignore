@@ -96,6 +96,7 @@ gen-external-apklibs
 
 # Gradle files
 .gradle
+!gradle/wrapper/gradle-wrapper.jar
 
 # Signing files
 .signing/

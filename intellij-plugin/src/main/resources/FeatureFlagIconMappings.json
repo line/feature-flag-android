@@ -1,0 +1,12 @@
+{
+    "icons": {
+        "expui": {
+            "featureFlagFile.svg": "icons/featureFlagFile.svg",
+            "featureFlagSingleGutter.svg": "icons/featureFlagSingleGutter.svg",
+            "featureFlagSingleProperty.svg": "icons/featureFlagSingleProperty.svg",
+            "featureFlagStructureViewOverridable.svg": "icons/featureFlagStructureViewOverridable.svg",
+            "featureFlagStructureViewLiteralize.svg": "icons/featureFlagStructureViewLiteralize.svg",
+            "featureFlagStructureViewPrivate.svg": "icons/featureFlagStructureViewPrivate.svg"
+        }
+    }
+}

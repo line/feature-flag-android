@@ -1,0 +1,9 @@
+.gradle
+.idea
+.intellijPlatform
+.qodana
+build
+
+!gradle/wrapper/gradle-wrapper.jar
+!src/main/gen/
+!src/main/**/icon/

@@ -1,0 +1,11 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <codeInsight.lineMarkerProvider
+                language="kotlin"
+                implementationClass="com.linecorp.android.featureflag.ij.plugin.linemarker.FeatureFlagKotlinLineMarkerProvider"/>
+        <lang.documentationProvider
+                language="kotlin"
+                order="FIRST"
+                implementationClass="com.linecorp.android.featureflag.ij.plugin.documentation.FeatureFlagDocumentationProvider"/>
+    </extensions>
+</idea-plugin>
