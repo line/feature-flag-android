@@ -19,7 +19,6 @@ package com.linecorp.android.featureflag.ij.plugin
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiComment
-import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
@@ -54,15 +53,14 @@ object FeatureFlagUtil {
     }
 
     fun findDocumentationComment(property: FeatureFlagProperty): String {
-        val result = mutableListOf<String>()
-        var element: PsiElement? = property.prevSibling
-        while (element is PsiComment) {
-            result.add(0, element.getText().replaceFirst("#", ""))
-            element = element.prevSibling
-        }
+        val commentLines =
+            generateSequence(property.prevSibling as? PsiComment) { it.prevSibling as? PsiComment }
+                .map { it.text.replaceFirst("#", "") }
+                .toList()
+                .reversed()
         val commentBuilder = StringBuilder()
         var currentLineSpace: Int? = null
-        for (line in result) {
+        for (line in commentLines) {
             val lineSpace = line.takeWhile { it == ' ' }.length
             if (currentLineSpace == null) {
                 commentBuilder.append(line.substring(lineSpace).trimEnd())
