@@ -17,6 +17,7 @@
 package com.linecorp.android.featureflag.ij.plugin
 
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiComment
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
@@ -36,10 +37,7 @@ object FeatureFlagUtil {
             FeatureFlagFileType,
             GlobalSearchScope.allScope(project)
         )
-        return virtualFiles.asSequence()
-            .filterNotNull()
-            .mapNotNull { psiManager.findFile(it) as? FeatureFlagFile }
-            .mapNotNull { PsiTreeUtil.getChildrenOfType(it, FeatureFlagProperty::class.java) }
+        return virtualFiles.getAllFeatureFlagProperties(psiManager)
             .flatMap { properties -> properties.filter { it.key == key } }
             .toList()
     }
@@ -50,10 +48,7 @@ object FeatureFlagUtil {
             FeatureFlagFileType,
             GlobalSearchScope.allScope(project)
         )
-        return virtualFiles.asSequence()
-            .filterNotNull()
-            .mapNotNull { psiManager.findFile(it) as? FeatureFlagFile }
-            .mapNotNull { PsiTreeUtil.getChildrenOfType(it, FeatureFlagProperty::class.java) }
+        return virtualFiles.getAllFeatureFlagProperties(psiManager)
             .flatMap { it.asList() }
             .toList()
     }
@@ -82,4 +77,11 @@ object FeatureFlagUtil {
         }
         return commentBuilder.toString()
     }
+
+    private fun Collection<VirtualFile?>.getAllFeatureFlagProperties(
+        psiManager: PsiManager
+    ): Sequence<Array<FeatureFlagProperty>> = asSequence()
+        .filterNotNull()
+        .mapNotNull { psiManager.findFile(it) as? FeatureFlagFile }
+        .mapNotNull { PsiTreeUtil.getChildrenOfType(it, FeatureFlagProperty::class.java) }
 }
