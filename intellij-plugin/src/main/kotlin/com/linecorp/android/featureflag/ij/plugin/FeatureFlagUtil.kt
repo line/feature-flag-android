@@ -59,19 +59,18 @@ object FeatureFlagUtil {
                 .toList()
                 .reversed()
         val commentBuilder = StringBuilder()
-        var currentLineSpace: Int? = null
+        var currentParagraphIndentDepth: Int? = null
         for (line in commentLines) {
-            val lineSpace = line.takeWhile { it == ' ' }.length
-            if (currentLineSpace == null) {
-                commentBuilder.append(line.substring(lineSpace).trimEnd())
-                currentLineSpace = lineSpace
-            } else if (lineSpace == currentLineSpace + 1) {
-                commentBuilder.append(line.substring(currentLineSpace).trimEnd())
-            } else {
-                commentBuilder.append("\n")
-                commentBuilder.append(line.substring(lineSpace).trimEnd())
-                currentLineSpace = lineSpace
+            val indentDepth = line.takeWhile { it == ' ' }.length
+            // If a line break is included, it is basically recognized as a new line, but if a
+            // single space is added at the beginning, it is recognized as a continuation of the
+            // previous line.
+            when (currentParagraphIndentDepth) {
+                null -> currentParagraphIndentDepth = indentDepth
+                indentDepth - 1 -> commentBuilder.append(" ")
+                else -> commentBuilder.append("\n")
             }
+            commentBuilder.append(line.drop(indentDepth).trimEnd())
         }
         return commentBuilder.toString()
     }
