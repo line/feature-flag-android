@@ -42,12 +42,9 @@ class FeatureFlagKotlinLineMarkerProvider : FeatureFlagLineMarkerProvider() {
             }
         }
 
-        val featureFlagWholeElement = if (parent.text.endsWith(element.text)) {
-            // In case of qualified class name access.
-            parent.parent as? KtDotQualifiedExpression ?: return null
-        } else {
-            parent
-        }
+        val featureFlagWholeElement = parent.takeUnless { parent.text.endsWith(element.text) }
+            ?: parent.parent as? KtDotQualifiedExpression
+            ?: return null
         val flagNameReferenceExpression =
             featureFlagWholeElement.lastChild as? KtNameReferenceExpression ?: return null
         return flagNameReferenceExpression.getIdentifier()
