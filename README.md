@@ -119,6 +119,12 @@ presenter.show()
 FeatureFlag.FLAG_5 = false
 ```
 
+## IntelliJ Plugin
+
+We also provide [FeatureFlag Android Support](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID), an IDE Plugin to support this `FEATURE_FLAG` file in IntelliJ IDEs including Android Studio.
+
+See [here](intellij-plugin/README.md) for an overview and installation instructions.
+
 ## How to contribute
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).

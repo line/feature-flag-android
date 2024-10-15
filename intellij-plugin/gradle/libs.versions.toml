@@ -1,0 +1,35 @@
+[versions]
+
+feature-flag-intellij-plugin = "1.0.0"
+
+# https://kotlinlang.org/docs/releases.html#release-details
+kotlin = "1.9.25"
+
+# https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html
+intellij-platform = "2.1.0"
+
+# https://github.com/JetBrains/gradle-changelog-plugin/releases
+changelog = "2.2.1"
+
+# https://github.com/Kotlin/kotlinx-kover/releases
+kover = "0.8.3"
+
+# https://www.jetbrains.com/help/qodana/qodana-gradle-plugin.html
+qodana = "2024.2.3"
+
+# https://github.com/JLLeitschuh/ktlint-gradle/releases
+ktlint-gradle = "10.0.0"
+
+# https://github.com/junit-team/junit4/releases
+junit = "4.13.2"
+
+[plugins]
+changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
+intellij-platform = { id = "org.jetbrains.intellij.platform", version.ref = "intellij-platform" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+qodana = { id = "org.jetbrains.qodana", version.ref = "qodana" }
+ktlint-gradle = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gradle" }
+
+[libraries]
+junit = { group = "junit", name = "junit", version.ref = "junit" }
