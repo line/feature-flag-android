@@ -81,7 +81,7 @@ intellijPlatform {
 
         ideaVersion {
             sinceBuild = "241.18034" // Koala | 2024.1.1 Patch 1
-            untilBuild = null
+            untilBuild = provider { null } // Accept all versions since `sinceBuild`.
         }
     }
 
