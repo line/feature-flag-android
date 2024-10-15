@@ -80,7 +80,8 @@ intellijPlatform {
         }
 
         ideaVersion {
-            sinceBuild = "241.18034" // Koala | 2024.1.1 Patch 1
+            // https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html
+            sinceBuild = "241"
             untilBuild = provider { null } // Accept all versions since `sinceBuild`.
         }
     }
