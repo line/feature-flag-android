@@ -1,5 +1,6 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 plugins {
@@ -80,8 +81,9 @@ intellijPlatform {
         }
 
         ideaVersion {
-            sinceBuild = "241.18034" // Koala | 2024.1.1 Patch 1
-            untilBuild = null
+            // https://plugins.jetbrains.com/docs/intellij/android-studio-releases-list.html
+            sinceBuild = "241"
+            untilBuild = provider { null } // Accept all versions since `sinceBuild`.
         }
     }
 
@@ -102,7 +104,10 @@ intellijPlatform {
 
     pluginVerification {
         ides {
-            recommended()
+            // Only on GitHub CI, verify for 2024.2 fails because there is no java plugin. as with
+            // the `intellijPlatform` item, the version is temporarily fixed because it seems to be
+            // unstable above 2024.2 now.
+            ide(IntelliJPlatformType.AndroidStudio, "2024.1.2.13")
         }
     }
 
