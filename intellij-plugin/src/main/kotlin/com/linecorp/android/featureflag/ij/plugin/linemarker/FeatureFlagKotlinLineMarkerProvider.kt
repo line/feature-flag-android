@@ -17,10 +17,11 @@
 package com.linecorp.android.featureflag.ij.plugin.linemarker
 
 import com.intellij.psi.PsiElement
-import org.jetbrains.kotlin.idea.caches.resolve.analyze
-import org.jetbrains.kotlin.psi.KtDotQualifiedExpression
+import org.jetbrains.kotlin.idea.references.mainReference
 import org.jetbrains.kotlin.psi.KtNameReferenceExpression
-import org.jetbrains.kotlin.resolve.BindingContext
+import com.intellij.psi.PsiField
+import com.intellij.psi.impl.source.tree.LeafPsiElement
+import org.jetbrains.kotlin.lexer.KtTokens
 
 /**
  * An implementation of [FeatureFlagLineMarkerProvider] for Kotlin.
@@ -28,25 +29,18 @@ import org.jetbrains.kotlin.resolve.BindingContext
 class FeatureFlagKotlinLineMarkerProvider : FeatureFlagLineMarkerProvider() {
 
     override fun findFeatureFlagElement(element: PsiElement): PsiElement? {
-        if (element !is KtNameReferenceExpression) {
+        if (element !is LeafPsiElement || element.elementType != KtTokens.IDENTIFIER) {
             return null
         }
-        val parent = element.parent as? KtDotQualifiedExpression ?: return null
+        val entireFlagNameReferenceExpression =
+            element.parent as? KtNameReferenceExpression ?: return null
 
-        if (!element.text.endsWith(FEATURE_FLAG_CLASS_SUFFIX)) {
-            // In case of import alias or type alias.
-            val originalTypeName =
-                element.analyze().get(BindingContext.REFERENCE_TARGET, element)?.name?.asString()
-            if (originalTypeName != FEATURE_FLAG_CLASS_SUFFIX) {
-                return null
-            }
+        val resolvedField =
+            entireFlagNameReferenceExpression.mainReference.resolve() as? PsiField ?: return null
+        val flagContainingClassName = resolvedField.containingClass?.name ?: return null
+        if (!flagContainingClassName.endsWith(FEATURE_FLAG_CLASS_SUFFIX)) {
+            return null
         }
-
-        val featureFlagWholeElement = parent.takeUnless { parent.text.endsWith(element.text) }
-            ?: parent.parent as? KtDotQualifiedExpression
-            ?: return null
-        val flagNameReferenceExpression =
-            featureFlagWholeElement.lastChild as? KtNameReferenceExpression ?: return null
-        return flagNameReferenceExpression.getIdentifier()
+        return element
     }
 }

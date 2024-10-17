@@ -9,6 +9,10 @@
 
     <resource-bundle>messages.FeatureFlagBundle</resource-bundle>
 
+    <extensions defaultExtensionNs="org.jetbrains.kotlin">
+        <supportsKotlinPluginMode supportsK2="true"/>
+    </extensions>
+
     <extensions defaultExtensionNs="com.intellij">
         <fileType
                 name="FeatureFlag File"
