@@ -26,17 +26,12 @@ import com.intellij.psi.PsiReferenceExpression
  */
 class FeatureFlagJavaLineMarkerProvider : FeatureFlagLineMarkerProvider() {
 
-    override fun findFeatureFlagElement(element: PsiElement): PsiElement? {
+    override fun isFeatureFlagPropertyIdentifier(element: PsiElement): Boolean {
         if (element !is PsiIdentifier) {
-            return null
+            return false
         }
-        val parent = element.parent as? PsiReferenceExpression ?: return null
-
-        val resolvedField = parent.resolve() as? PsiField ?: return null
-        val flagContainingClassName = resolvedField.containingClass?.name ?: return null
-        if (!flagContainingClassName.endsWith(FEATURE_FLAG_CLASS_SUFFIX)) {
-            return null
-        }
-        return element
+        val parent = element.parent as? PsiReferenceExpression ?: return false
+        val resolvedField = parent.resolve() as? PsiField ?: return false
+        return isFeatureFlagField(resolvedField)
     }
 }

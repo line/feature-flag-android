@@ -20,6 +20,7 @@ import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiField
 import com.linecorp.android.featureflag.ij.plugin.FeatureFlagBundle
 import com.linecorp.android.featureflag.ij.plugin.icon.FeatureFlagIcons
 import com.linecorp.android.featureflag.ij.plugin.FeatureFlagUtil
@@ -30,24 +31,31 @@ import com.linecorp.android.featureflag.ij.plugin.FeatureFlagUtil
  */
 abstract class FeatureFlagLineMarkerProvider : RelatedItemLineMarkerProvider() {
 
-    abstract fun findFeatureFlagElement(element: PsiElement): PsiElement?
+    abstract fun isFeatureFlagPropertyIdentifier(element: PsiElement): Boolean
 
     override fun collectNavigationMarkers(
         element: PsiElement,
         result: MutableCollection<in RelatedItemLineMarkerInfo<*>>
     ) {
-        val valueElement = findFeatureFlagElement(element) ?: return
-        val properties = FeatureFlagUtil.findProperties(element.project, valueElement.text)
+        if (!isFeatureFlagPropertyIdentifier(element)) {
+            return
+        }
+        val properties = FeatureFlagUtil.findProperties(element.project, element.text)
         if (properties.isEmpty()) {
             return
         }
         val builder = NavigationGutterIconBuilder.create(FeatureFlagIcons.SINGLE_GUTTER)
             .setTargets(properties)
             .setTooltipText(FeatureFlagBundle.message("lineMarker.tooltip"))
-        result.add(builder.createLineMarkerInfo(valueElement))
+        result.add(builder.createLineMarkerInfo(element))
     }
 
     protected companion object {
-        const val FEATURE_FLAG_CLASS_SUFFIX = "FeatureFlag"
+        private const val FEATURE_FLAG_CLASS_SUFFIX = "FeatureFlag"
+
+        fun isFeatureFlagField(psiField: PsiField): Boolean {
+            val flagContainingClassName = psiField.containingClass?.name ?: return false
+            return flagContainingClassName.endsWith(FEATURE_FLAG_CLASS_SUFFIX)
+        }
     }
 }

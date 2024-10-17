@@ -28,19 +28,14 @@ import org.jetbrains.kotlin.lexer.KtTokens
  */
 class FeatureFlagKotlinLineMarkerProvider : FeatureFlagLineMarkerProvider() {
 
-    override fun findFeatureFlagElement(element: PsiElement): PsiElement? {
+    override fun isFeatureFlagPropertyIdentifier(element: PsiElement): Boolean {
         if (element !is LeafPsiElement || element.elementType != KtTokens.IDENTIFIER) {
-            return null
+            return false
         }
         val entireFlagNameReferenceExpression =
-            element.parent as? KtNameReferenceExpression ?: return null
-
+            element.parent as? KtNameReferenceExpression ?: return false
         val resolvedField =
-            entireFlagNameReferenceExpression.mainReference.resolve() as? PsiField ?: return null
-        val flagContainingClassName = resolvedField.containingClass?.name ?: return null
-        if (!flagContainingClassName.endsWith(FEATURE_FLAG_CLASS_SUFFIX)) {
-            return null
-        }
-        return element
+            entireFlagNameReferenceExpression.mainReference.resolve() as? PsiField ?: return false
+        return isFeatureFlagField(resolvedField)
     }
 }
