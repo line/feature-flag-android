@@ -17,6 +17,7 @@
 package com.linecorp.android.featureflag.ij.plugin.linemarker
 
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiField
 import com.intellij.psi.PsiIdentifier
 import com.intellij.psi.PsiReferenceExpression
 
@@ -26,13 +27,16 @@ import com.intellij.psi.PsiReferenceExpression
 class FeatureFlagJavaLineMarkerProvider : FeatureFlagLineMarkerProvider() {
 
     override fun findFeatureFlagElement(element: PsiElement): PsiElement? {
-        if (element !is PsiReferenceExpression) {
-            return null
-        }
-        if (!element.text.endsWith(FEATURE_FLAG_CLASS_SUFFIX)) {
+        if (element !is PsiIdentifier) {
             return null
         }
         val parent = element.parent as? PsiReferenceExpression ?: return null
-        return parent.lastChild as? PsiIdentifier ?: return null
+
+        val resolvedField = parent.resolve() as? PsiField ?: return null
+        val flagContainingClassName = resolvedField.containingClass?.name ?: return null
+        if (!flagContainingClassName.endsWith(FEATURE_FLAG_CLASS_SUFFIX)) {
+            return null
+        }
+        return element
     }
 }
