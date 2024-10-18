@@ -1,6 +1,6 @@
 [versions]
 
-feature-flag-intellij-plugin = "1.0.0"
+feature-flag-intellij-plugin = "1.1.0"
 
 # https://kotlinlang.org/docs/releases.html#release-details
 kotlin = "1.9.25"
