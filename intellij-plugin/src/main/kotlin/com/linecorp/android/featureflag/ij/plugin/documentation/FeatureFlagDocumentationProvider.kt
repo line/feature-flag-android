@@ -48,15 +48,19 @@ class FeatureFlagDocumentationProvider : AbstractDocumentationProvider() {
         val (propertyName, currentValue) = getFeatureFlagProperty(element) ?: return null
         val property = FeatureFlagUtil.findProperties(element.project, propertyName).firstOrNull()
             ?: return null
-        val text = HtmlSyntaxInfoUtil.getHighlightedByLexerAndEncodedAsHtmlCodeSnippet(
-            element.project,
-            FeatureFlagLanguage,
-            property.text,
-            1.0f
-        )
-        val currentValueString = createCurrentValueHighlightedString(currentValue)
-        val currentValueText = FeatureFlagBundle.message("documentation.valueInCurrentClasspath")
-        return "$text<br>$currentValueText: $currentValueString"
+        return buildString {
+            HtmlSyntaxInfoUtil.appendHighlightedByLexerAndEncodedAsHtmlCodeSnippet(
+                this,
+                element.project,
+                FeatureFlagLanguage,
+                property.text,
+                1.0f
+            )
+            append("<br>")
+            append(appendCurrentValueHighlightedString(currentValue))
+            append(": ")
+            append(FeatureFlagBundle.message("documentation.valueInCurrentClasspath"))
+        }
     }
 
     private fun renderFullDoc(
@@ -66,13 +70,12 @@ class FeatureFlagDocumentationProvider : AbstractDocumentationProvider() {
         docComment: String
     ): String = buildString {
         append(DocumentationMarkup.DEFINITION_START)
-        append(
-            HtmlSyntaxInfoUtil.getHighlightedByLexerAndEncodedAsHtmlCodeSnippet(
-                project,
-                FeatureFlagLanguage,
-                definition,
-                1.0f
-            )
+        HtmlSyntaxInfoUtil.appendHighlightedByLexerAndEncodedAsHtmlCodeSnippet(
+            this,
+            project,
+            FeatureFlagLanguage,
+            definition,
+            1.0f
         )
         append(DocumentationMarkup.DEFINITION_END)
         append(DocumentationMarkup.CONTENT_START)
@@ -83,7 +86,9 @@ class FeatureFlagDocumentationProvider : AbstractDocumentationProvider() {
         append(FeatureFlagBundle.message("documentation.valueInCurrentClasspath"))
         append(":")
         append(DocumentationMarkup.SECTION_SEPARATOR)
-        append("<p>${createCurrentValueHighlightedString(currentValue)}</p>")
+        append("<p>")
+        appendCurrentValueHighlightedString(currentValue)
+        append("</p>")
         append(DocumentationMarkup.SECTION_END)
         append(DocumentationMarkup.SECTIONS_END)
     }
@@ -109,16 +114,18 @@ class FeatureFlagDocumentationProvider : AbstractDocumentationProvider() {
         return element.name to currentValue
     }
 
-    private fun createCurrentValueHighlightedString(currentValue: Boolean?): String =
+    private fun StringBuilder.appendCurrentValueHighlightedString(currentValue: Boolean?) {
         if (currentValue != null) {
-            HtmlSyntaxInfoUtil.getStyledSpan(
+            HtmlSyntaxInfoUtil.appendStyledSpan(
+                this,
                 DefaultLanguageHighlighterColors.KEYWORD,
                 currentValue.toString(),
                 1.0f
             )
         } else {
-            FeatureFlagBundle.message("documentation.notGeneratedYet")
+            append(FeatureFlagBundle.message("documentation.notGeneratedYet"))
         }
+    }
 
     private fun String.applyWebLink(): String =
         replace(SIMPLE_URL_PATTERN) { "<a href=\"${it.value}\">${it.value}</a>" }

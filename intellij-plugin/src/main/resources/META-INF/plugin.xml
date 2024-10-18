@@ -5,13 +5,13 @@
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.java</depends>
-    <depends
-            optional="true"
-            config-file="kotlin.xml">
-        org.jetbrains.kotlin
-    </depends>
+    <depends>org.jetbrains.kotlin</depends>
 
     <resource-bundle>messages.FeatureFlagBundle</resource-bundle>
+
+    <extensions defaultExtensionNs="org.jetbrains.kotlin">
+        <supportsKotlinPluginMode supportsK2="true"/>
+    </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
         <fileType
@@ -37,6 +37,10 @@
                 language="JAVA"
                 implementationClass="com.linecorp.android.featureflag.ij.plugin.linemarker.FeatureFlagJavaLineMarkerProvider"/>
 
+        <codeInsight.lineMarkerProvider
+                language="kotlin"
+                implementationClass="com.linecorp.android.featureflag.ij.plugin.linemarker.FeatureFlagKotlinLineMarkerProvider"/>
+
         <gotoSymbolContributor
                 implementation="com.linecorp.android.featureflag.ij.plugin.gotosymbol.FeatureFlagChooseByNameContributor"/>
 
@@ -49,6 +53,11 @@
 
         <lang.documentationProvider
                 language="JAVA"
+                order="FIRST"
+                implementationClass="com.linecorp.android.featureflag.ij.plugin.documentation.FeatureFlagDocumentationProvider"/>
+
+        <lang.documentationProvider
+                language="kotlin"
                 order="FIRST"
                 implementationClass="com.linecorp.android.featureflag.ij.plugin.documentation.FeatureFlagDocumentationProvider"/>
 
