@@ -24,6 +24,7 @@ import com.squareup.javawriter.JavaWriter
 import java.io.File
 import java.util.EnumSet
 import javax.lang.model.element.Modifier
+import org.gradle.api.logging.Logging
 
 /**
  * A writer class of feature flag Java file to make flag values accessible from application code.
@@ -34,6 +35,7 @@ internal class FeatureFlagJavaFileWriter(
     private val featureFlags: List<FeatureFlagData>,
     private val isReleasePhase: Boolean
 ) {
+    private val log = Logging.getLogger(javaClass)
 
     fun write() {
         val packageDirectory = outputDirectory.resolvePackageName(packageName)
@@ -60,7 +62,7 @@ internal class FeatureFlagJavaFileWriter(
     private fun JavaWriter.writeConstantFlags(
         flags: List<FeatureFlagData>
     ) = flags.forEach { flag ->
-        println("${flag.name} = ${flag.value}")
+        log.info("${flag.name} = ${flag.value}")
 
         val isRequiredLiteralValue = flag.hasOption(FeatureFlagOption.LITERALIZE) || isReleasePhase
 
@@ -80,7 +82,7 @@ internal class FeatureFlagJavaFileWriter(
         flags.forEach { flag ->
             val flagName = flag.name
             val flagValue = flag.value.toJavaValue(true)
-            println("$flagName = $flagValue")
+            log.info("$flagName = $flagValue")
             if (flag.hasOption(FeatureFlagOption.DEPRECATED)) {
                 emitAnnotation(DEPRECATED_ANNOTATION_CLASS_NAME)
             }
