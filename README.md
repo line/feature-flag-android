@@ -97,8 +97,9 @@ LITERALIZE FLAG_7 = DEBUG   # Try to use a primitive boolean as the flag value.
 # 2. Built in `RELEASE` phase and version `1.3.0` or later.
 FLAG_8 = DEBUG, RELEASE & 1.3.0~
 
+# Local flag reference
 PRIVATE FLAG_9_USERS = @user1, @user2  # Enabled if built by `user1` or `user2`
-FLAG_9 = FLAG_9_USERS & DEBUG          # Enabled if `FLAG_9_USERS` is enabled and built in `DEBUG` phase.
+FLAG_9 = :FLAG_9_USERS & DEBUG         # Enabled if `FLAG_9_USERS` is enabled and built in `DEBUG` phase.
 ```
 
 ### Use flag value from application code
