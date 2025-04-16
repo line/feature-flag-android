@@ -100,9 +100,6 @@ class FeatureFlagPlugin : Plugin<Project> {
         }
         val taskName = "generate${capitalizedVariantName}FeatureFlag"
         val taskProvider = project.tasks.register<FeatureFlagTask>(taskName) {
-            notCompatibleWithConfigurationCache(
-                "Requires Project instance to resolve build variants during task execution."
-            )
             sourceFiles = extension.sourceFiles
             packageName.set(packageNameProvider)
             phaseMap = getPhaseMap(extension.phases, currentBuildVariant)
