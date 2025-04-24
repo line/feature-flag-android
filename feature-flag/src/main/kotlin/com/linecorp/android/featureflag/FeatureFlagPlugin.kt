@@ -25,11 +25,11 @@ import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.LibraryPlugin
 import com.linecorp.android.featureflag.model.BuildVariant
 import com.linecorp.android.featureflag.model.ForciblyOverriddenFeatureFlags
+import java.util.Locale
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.register
-import java.util.Locale
 
 /**
  * A gradle plugin adding a task to create a feature flag Java file from a property file.

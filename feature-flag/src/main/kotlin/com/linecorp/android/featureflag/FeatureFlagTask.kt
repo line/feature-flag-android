@@ -16,6 +16,7 @@
 
 package com.linecorp.android.featureflag
 
+import com.github.zafarkhaja.semver.Version
 import com.linecorp.android.featureflag.loader.FeatureFlagFileTokenizer
 import com.linecorp.android.featureflag.loader.FeatureFlagOptionParser
 import com.linecorp.android.featureflag.loader.FeatureFlagSelectorEvaluator
@@ -23,10 +24,13 @@ import com.linecorp.android.featureflag.loader.FeatureFlagSelectorParser
 import com.linecorp.android.featureflag.loader.FeatureFlagValueOptimizer
 import com.linecorp.android.featureflag.model.BuildEnvironment
 import com.linecorp.android.featureflag.model.FeatureFlagData
+import com.linecorp.android.featureflag.model.FeatureFlagEntry
 import com.linecorp.android.featureflag.model.ForciblyOverriddenFeatureFlags
 import org.gradle.api.DefaultTask
+import org.gradle.api.GradleException
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileCollection
+import org.gradle.api.provider.Property
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFiles
@@ -35,10 +39,6 @@ import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
-import com.github.zafarkhaja.semver.Version
-import com.linecorp.android.featureflag.model.FeatureFlagEntry
-import org.gradle.api.GradleException
-import org.gradle.api.provider.Property
 
 /**
  * A gradle task to generate feature flag Java file for the current module.

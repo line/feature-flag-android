@@ -18,10 +18,10 @@ package com.linecorp.android.featureflag.loader
 
 import com.linecorp.android.featureflag.model.FeatureFlagEntry
 import com.linecorp.android.featureflag.utils.assertFailureMessage
-import org.spekframework.spek2.Spek
-import org.spekframework.spek2.style.specification.describe
 import java.io.File
 import kotlin.test.assertEquals
+import org.spekframework.spek2.Spek
+import org.spekframework.spek2.style.specification.describe
 
 /**
  * Tests for [FeatureFlagFileTokenizer].

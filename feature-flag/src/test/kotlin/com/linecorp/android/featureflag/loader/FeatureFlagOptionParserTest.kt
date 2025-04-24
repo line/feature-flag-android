@@ -21,10 +21,10 @@ import com.linecorp.android.featureflag.model.FeatureFlagOption.DEPRECATED
 import com.linecorp.android.featureflag.model.FeatureFlagOption.OVERRIDABLE
 import com.linecorp.android.featureflag.model.FeatureFlagOption.PRIVATE
 import com.linecorp.android.featureflag.utils.assertFailureMessage
-import org.spekframework.spek2.Spek
-import org.spekframework.spek2.style.specification.describe
 import java.io.File
 import kotlin.test.assertEquals
+import org.spekframework.spek2.Spek
+import org.spekframework.spek2.style.specification.describe
 
 /**
  * Tests for [FeatureFlagOptionParser].

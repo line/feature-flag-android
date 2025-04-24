@@ -24,9 +24,9 @@ import com.linecorp.android.featureflag.model.FlagLink
 import com.linecorp.android.featureflag.utils.assertDisjunction
 import com.linecorp.android.featureflag.utils.conjunctionOf
 import com.linecorp.android.featureflag.utils.disjunctionOf
+import kotlin.test.assertEquals
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
-import kotlin.test.assertEquals
 import com.linecorp.android.featureflag.model.FeatureFlagAppliedElement as AppliedElement
 
 /**

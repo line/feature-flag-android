@@ -22,8 +22,7 @@ gradlePlugin {
             id = libs.feature.flag.get().module.name
             implementationClass = "com.linecorp.android.featureflag.FeatureFlagPlugin"
             displayName = "feature-flag-android"
-            description = "A Gradle plugin to achieve feature flag based development for Android" +
-                    " applications."
+            description = "A Gradle plugin to achieve feature flag based development for Android applications."
             tags.set(listOf("android", "feature-flag", "feature-toggle"))
         }
     }
@@ -43,9 +42,7 @@ tasks.withType(Test::class.java) {
 }
 
 fun isStable(version: String): Boolean {
-    val hasStableKeyword = setOf("RELEASE", "FINAL", "GA").any {
-        version.contains(version, ignoreCase = true)
-    }
+    val hasStableKeyword = setOf("RELEASE", "FINAL", "GA").any { version.contains(version, ignoreCase = true) }
     val regex = """^[0-9,.v-]+(-r)?$""".toRegex()
     return hasStableKeyword || regex.matches(version)
 }

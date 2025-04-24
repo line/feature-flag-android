@@ -19,12 +19,12 @@ package com.linecorp.android.featureflag
 import com.linecorp.android.featureflag.model.BuildVariant
 import io.mockk.every
 import io.mockk.mockk
+import java.io.File
+import kotlin.test.assertEquals
 import org.gradle.api.Project
 import org.gradle.api.file.ConfigurableFileCollection
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
-import java.io.File
-import kotlin.test.assertEquals
 
 object FeatureFlagExtensionTest : Spek({
     describe("public functions return correct values") {
