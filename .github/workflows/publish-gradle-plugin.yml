@@ -22,11 +22,14 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: zulu
-          java-version: 11
+          java-version: 21
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
       - name: Publish artifacts
         if: ${{ github.event.inputs.cond_release == 'release' }}
-        run: ./gradlew clean :feature-flag:publishPlugin -Dgradle.publish.key="${{ secrets.GRADLE_PLUGIN_PORTAL_PUBLISH_KEY }}" -Dgradle.publish.secret="${{ secrets.GRADLE_PLUGIN_PORTAL_PUBLISH_SECRET }}"
+        env:
+          GRADLE_PUBLISH_KEY: ${{ secrets.GRADLE_PLUGIN_PORTAL_PUBLISH_KEY }}
+          GRADLE_PUBLISH_SECRET: ${{ secrets.GRADLE_PLUGIN_PORTAL_PUBLISH_SECRET }}
+        run: ./gradlew clean :feature-flag:publishPlugin

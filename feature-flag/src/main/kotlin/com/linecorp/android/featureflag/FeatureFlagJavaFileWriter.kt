@@ -243,7 +243,8 @@ internal class FeatureFlagJavaFileWriter(
             |            }
             |        }
             |    )
-            |)""".trimMargin()
+            |)
+            """.trimMargin()
         emitStatement(accessorCode)
     }
 

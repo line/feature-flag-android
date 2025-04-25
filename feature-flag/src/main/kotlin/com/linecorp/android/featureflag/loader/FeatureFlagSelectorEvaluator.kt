@@ -17,6 +17,7 @@
 package com.linecorp.android.featureflag.loader
 
 import com.github.zafarkhaja.semver.Version
+import com.linecorp.android.featureflag.loader.FeatureFlagSelectorEvaluator.evaluate
 import com.linecorp.android.featureflag.model.BuildEnvironment
 import com.linecorp.android.featureflag.model.DisjunctionNormalForm.Conjunction
 import com.linecorp.android.featureflag.model.DisjunctionNormalForm.Disjunction

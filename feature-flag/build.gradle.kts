@@ -15,10 +15,15 @@ version = libs.versions.feature.flag.get()
 group = libs.feature.flag.get().module.group
 
 gradlePlugin {
+    website.set("https://github.com/line/feature-flag-android")
+    vcsUrl.set("https://github.com/line/feature-flag-android.git")
     plugins {
         register("featureFlagPlugin") {
             id = libs.feature.flag.get().module.name
             implementationClass = "com.linecorp.android.featureflag.FeatureFlagPlugin"
+            displayName = "feature-flag-android"
+            description = "A Gradle plugin to achieve feature flag based development for Android applications."
+            tags.set(listOf("android", "feature-flag", "feature-toggle"))
         }
     }
 }
@@ -37,22 +42,14 @@ tasks.withType(Test::class.java) {
 }
 
 fun isStable(version: String): Boolean {
-    val hasStableKeyword = setOf("RELEASE", "FINAL", "GA").any {
-        version.contains(version, ignoreCase = true)
-    }
+    val hasStableKeyword = setOf("RELEASE", "FINAL", "GA").any { version.contains(version, ignoreCase = true) }
     val regex = """^[0-9,.v-]+(-r)?$""".toRegex()
     return hasStableKeyword || regex.matches(version)
 }
 
 tasks.withType<DependencyUpdatesTask> {
-    resolutionStrategy {
-        componentSelection {
-            all {
-                if (!isStable(candidate.version) && isStable(currentVersion)) {
-                    reject("Release candidate")
-                }
-            }
-        }
+    rejectVersionIf {
+        !isStable(candidate.version)
     }
     checkForGradleUpdate = true
 }
@@ -66,20 +63,6 @@ dependencies {
     testImplementation(libs.spek2.dsl.jvm)
     testRuntimeOnly(libs.kotlin.reflect)
     testRuntimeOnly(libs.spek2.runner.junit5)
-}
-
-pluginBundle {
-    website = "https://github.com/line/feature-flag-android"
-    vcsUrl = "https://github.com/line/feature-flag-android.git"
-    description =
-        "A Gradle plugin to achieve feature flag based development for Android applications."
-    (plugins) {
-        "featureFlagPlugin" {
-            displayName = "feature-flag-android"
-            tags = listOf("android", "feature-flag", "feature-toggle")
-            version = libs.versions.feature.flag.get()
-        }
-    }
 }
 
 publishing {

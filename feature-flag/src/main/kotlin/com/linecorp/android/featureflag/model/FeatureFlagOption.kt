@@ -26,11 +26,13 @@ internal enum class FeatureFlagOption {
      * module.
      */
     PRIVATE,
+
     /**
      * An option to make a flag modifiable on runtime.
      * This option cannot be used with [LITERALIZE] option at the same time.
      */
     OVERRIDABLE,
+
     /**
      * An option to allow a flag value to use a boolean literal even in non-release phase.
      * Flags with this option does not wrap the value by dynamic instantiation.
@@ -38,6 +40,7 @@ internal enum class FeatureFlagOption {
      * This option cannot be used with [OVERRIDABLE] option at the same time.
      */
     LITERALIZE,
+
     /**
      * An option to annotate a flag with [Deprecated].
      */

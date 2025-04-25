@@ -17,9 +17,9 @@
 package com.linecorp.android.featureflag
 
 import com.linecorp.android.featureflag.model.BuildVariant
+import kotlin.test.assertEquals
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
-import kotlin.test.assertEquals
 
 /**
  * Tests for [FeatureFlagPlugin].
