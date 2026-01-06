@@ -23,9 +23,9 @@ import com.linecorp.android.featureflag.model.FeatureFlagAppliedElement
 import com.linecorp.android.featureflag.model.FeatureFlagElement
 import com.linecorp.android.featureflag.model.FlagLink
 import com.linecorp.android.featureflag.utils.assertDisjunction
-import com.linecorp.android.featureflag.utils.assertFailureMessage
 import com.linecorp.android.featureflag.utils.conjunctionOf
 import com.linecorp.android.featureflag.utils.disjunctionOf
+import io.kotest.assertions.throwables.shouldThrowWithMessage
 import io.kotest.core.spec.style.FunSpec
 
 /**
@@ -218,7 +218,7 @@ class FeatureFlagSelectorEvaluatorTest : FunSpec({
 
     context("Evaluating is failed") {
         test("Unknown phase") {
-            assertFailureMessage<IllegalArgumentException>("Unknown phase: PHASE") {
+            shouldThrowWithMessage<IllegalArgumentException>("Unknown phase: PHASE") {
                 FeatureFlagSelectorEvaluator.evaluate(
                     disjunctionOf(conjunctionOf(FeatureFlagElement.Phase("PHASE"))),
                     BuildEnvironment(emptyMap(), Version.valueOf("1.0.0"), "")

@@ -17,20 +17,7 @@
 package com.linecorp.android.featureflag.utils
 
 import com.linecorp.android.featureflag.model.DisjunctionNormalForm
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-
-/**
- * Asserts that a [block] operation fails with an exception, where the type is [T] and the message
- * is [failureMessage].
- */
-internal inline fun <reified T : Throwable> assertFailureMessage(
-    failureMessage: String,
-    block: () -> Unit
-) {
-    val exception = assertFailsWith<T> { block() }
-    assertEquals(failureMessage, exception.message)
-}
+import io.kotest.matchers.shouldBe
 
 /**
  * Asserts that the given two [DisjunctionNormalForm.Disjunction]s are equal.
@@ -41,8 +28,8 @@ internal fun <T> assertDisjunction(
     expected: DisjunctionNormalForm.Disjunction<out T>,
     actual: DisjunctionNormalForm.Disjunction<out T>
 ) {
-    assertEquals(expected.values.size, actual.values.size, "Disjunction sizes are different: ")
+    actual.values.size shouldBe expected.values.size
     expected.values.zip(actual.values).forEach { (expectedConjunction, actualConjunction) ->
-        assertEquals(expectedConjunction.values, actualConjunction.values)
+        actualConjunction.values shouldBe expectedConjunction.values
     }
 }

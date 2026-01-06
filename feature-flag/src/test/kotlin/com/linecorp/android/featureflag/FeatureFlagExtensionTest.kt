@@ -18,10 +18,10 @@ package com.linecorp.android.featureflag
 
 import com.linecorp.android.featureflag.model.BuildVariant
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import java.io.File
-import kotlin.test.assertEquals
 import org.gradle.api.Project
 import org.gradle.api.file.ConfigurableFileCollection
 
@@ -34,15 +34,9 @@ class FeatureFlagExtensionTest : FunSpec({
     val extension = FeatureFlagExtension(project)
 
     test("buildType") {
-        assertEquals(
-            BuildVariant.Element.BuildType("release"),
-            extension.buildType("release")
-        )
+        extension.buildType("release") shouldBe BuildVariant.Element.BuildType("release")
     }
     test("flavor") {
-        assertEquals(
-            BuildVariant.Element.Flavor("production"),
-            extension.flavor("production")
-        )
+        extension.flavor("release") shouldBe BuildVariant.Element.Flavor("release")
     }
 })

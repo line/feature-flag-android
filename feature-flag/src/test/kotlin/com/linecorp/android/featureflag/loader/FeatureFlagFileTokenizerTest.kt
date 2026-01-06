@@ -17,10 +17,10 @@
 package com.linecorp.android.featureflag.loader
 
 import com.linecorp.android.featureflag.model.FeatureFlagEntry
-import com.linecorp.android.featureflag.utils.assertFailureMessage
+import io.kotest.assertions.throwables.shouldThrowWithMessage
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 import java.io.File
-import kotlin.test.assertEquals
 
 /**
  * Tests for [FeatureFlagFileTokenizer].
@@ -37,69 +37,61 @@ class FeatureFlagFileTokenizerTest : FunSpec({
 
     context("Parsed result is correct") {
         test("with options") {
-            assertEquals(
+            FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_VALID_OPTION")) shouldBe
                 listOf(
                     FeatureFlagEntry("FLAG_1", "VALUE", "OPTION"),
                     FeatureFlagEntry("FLAG_2", "VALUE", "OPTION"),
                     FeatureFlagEntry("FLAG_3", "VALUE", "OPTION1 OPTION2"),
                     FeatureFlagEntry("FLAG_4", "VALUE", "OPTION1  OPTION2")
-                ),
-                FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_VALID_OPTION"))
-            )
+                )
         }
         test("with name") {
-            assertEquals(
+            FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_VALID_NAME")) shouldBe
                 listOf(
                     FeatureFlagEntry("FLAG_1", "VALUE", ""),
                     FeatureFlagEntry("FLAG_2", "VALUE", ""),
                     FeatureFlagEntry("FLAG_3", "VALUE", "")
-                ),
-                FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_VALID_NAME"))
-            )
+                )
         }
         test("with value") {
-            assertEquals(
+            FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_VALID_VALUE")) shouldBe
                 listOf(
                     FeatureFlagEntry("FLAG_1", "VALUE", ""),
                     FeatureFlagEntry("FLAG_2", "VALUE", ""),
                     FeatureFlagEntry("FLAG_3", "VALUE VALUE", ""),
                     FeatureFlagEntry("FLAG_4", "VALUE", ""),
                     FeatureFlagEntry("FLAG_5", "VALUE=VALUE", "")
-                ),
-                FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_VALID_VALUE"))
-            )
+                )
         }
         test("with empty") {
-            assertEquals(
-                emptyList(),
-                FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_VALID_EMPTY"))
-            )
+            FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_VALID_EMPTY")) shouldBe
+                emptyList()
         }
     }
 
     context("Parsing is failed") {
         test("if a line has't key-value pair") {
-            assertFailureMessage<IllegalArgumentException>("Couldn't parse a line: INVALID_LINE") {
+            shouldThrowWithMessage<IllegalArgumentException>("Couldn't parse a line: INVALID_LINE") {
                 FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_INVALID_NO_KEY_VALUE"))
             }
         }
         test("if a key is empty") {
-            assertFailureMessage<IllegalArgumentException>("Couldn't parse a line: =VALUE") {
+            shouldThrowWithMessage<IllegalArgumentException>("Couldn't parse a line: =VALUE") {
                 FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_INVALID_EMPTY_KEY"))
             }
         }
         test("if a key is blank") {
-            assertFailureMessage<IllegalArgumentException>("Couldn't parse a line:  =VALUE") {
+            shouldThrowWithMessage<IllegalArgumentException>("Couldn't parse a line:  =VALUE") {
                 FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_INVALID_BLANK_KEY"))
             }
         }
         test("if a value is empty") {
-            assertFailureMessage<IllegalArgumentException>("Couldn't parse a line: KEY=") {
+            shouldThrowWithMessage<IllegalArgumentException>("Couldn't parse a line: KEY=") {
                 FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_INVALID_EMPTY_VALUE"))
             }
         }
         test("if a value is blank") {
-            assertFailureMessage<IllegalStateException>("Value mustn't be empty: KEY= ") {
+            shouldThrowWithMessage<IllegalStateException>("Value mustn't be empty: KEY= ") {
                 FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_INVALID_BLANK_VALUE"))
             }
         }

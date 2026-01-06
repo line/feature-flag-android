@@ -20,10 +20,11 @@ import com.linecorp.android.featureflag.model.FeatureFlagOption
 import com.linecorp.android.featureflag.model.FeatureFlagOption.DEPRECATED
 import com.linecorp.android.featureflag.model.FeatureFlagOption.OVERRIDABLE
 import com.linecorp.android.featureflag.model.FeatureFlagOption.PRIVATE
-import com.linecorp.android.featureflag.utils.assertFailureMessage
+import io.kotest.assertions.throwables.shouldThrowWithMessage
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.shouldBe
 import java.io.File
-import kotlin.test.assertEquals
 
 /**
  * Tests for [FeatureFlagOptionParser].
@@ -39,12 +40,8 @@ class FeatureFlagOptionParserTest : FunSpec({
 
     context("Precondition") {
         test("A reverse map of Option enum is sufficient") {
-            val actualEnums = FeatureFlagOption.values().toList()
-            val reverseMapContainsEnums = FeatureFlagOptionParser.OPTION_MAPPING.values
-
-            assertEquals(actualEnums.size, reverseMapContainsEnums.size)
-            assertEquals(0, reverseMapContainsEnums.subtract(actualEnums).size)
-            assertEquals(0, actualEnums.subtract(reverseMapContainsEnums).size)
+            FeatureFlagOptionParser.OPTION_MAPPING.values shouldContainExactlyInAnyOrder
+                FeatureFlagOption.entries
         }
     }
 
@@ -61,14 +58,14 @@ class FeatureFlagOptionParserTest : FunSpec({
 
             testCases.forEachIndexed { index, testValue ->
                 test(testValue) {
-                    assertEquals(expectedResults[index], FeatureFlagOptionParser.parse(testValue))
+                    FeatureFlagOptionParser.parse(testValue) shouldBe expectedResults[index]
                 }
             }
         }
 
         context("with empty") {
             test("Empty option") {
-                assertEquals(emptySet<FeatureFlagOption>(), FeatureFlagOptionParser.parse(""))
+                FeatureFlagOptionParser.parse("") shouldBe emptySet()
             }
         }
 
@@ -87,7 +84,7 @@ class FeatureFlagOptionParserTest : FunSpec({
 
             testCases.forEachIndexed { index, testValue ->
                 test(testValue) {
-                    assertEquals(expectedResults[index], FeatureFlagOptionParser.parse(testValue))
+                    FeatureFlagOptionParser.parse(testValue) shouldBe expectedResults[index]
                 }
             }
         }
@@ -105,7 +102,7 @@ class FeatureFlagOptionParserTest : FunSpec({
 
             testCases.forEachIndexed { index, testValue ->
                 test(""""$testValue"""") {
-                    assertEquals(expectedResults[index], FeatureFlagOptionParser.parse(testValue))
+                    FeatureFlagOptionParser.parse(testValue) shouldBe expectedResults[index]
                 }
             }
         }
@@ -113,7 +110,7 @@ class FeatureFlagOptionParserTest : FunSpec({
 
     context("Parsing is failed") {
         test("with undefined option") {
-            assertFailureMessage<IllegalArgumentException>(
+            shouldThrowWithMessage<IllegalArgumentException>(
                 "A specified option is undefined: INVALID"
             ) {
                 FeatureFlagOptionParser.parse(

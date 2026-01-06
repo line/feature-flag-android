@@ -22,9 +22,9 @@ import com.linecorp.android.featureflag.model.FeatureFlagElement.User
 import com.linecorp.android.featureflag.model.FeatureFlagElement.Version
 import com.linecorp.android.featureflag.model.FlagLink
 import com.linecorp.android.featureflag.utils.assertDisjunction
-import com.linecorp.android.featureflag.utils.assertFailureMessage
 import com.linecorp.android.featureflag.utils.conjunctionOf
 import com.linecorp.android.featureflag.utils.disjunctionOf
+import io.kotest.assertions.throwables.shouldThrowWithMessage
 import io.kotest.core.spec.style.FunSpec
 import java.io.File
 
@@ -131,7 +131,7 @@ class FeatureFlagSelectorParserTest : FunSpec({
     context("Parsing is failed") {
         context("on each element type") {
             test("User element with no value") {
-                assertFailureMessage<IllegalArgumentException>(
+                shouldThrowWithMessage<IllegalArgumentException>(
                     "Missing user name in user element."
                 ) {
                     FeatureFlagSelectorParser.parse(
@@ -140,7 +140,7 @@ class FeatureFlagSelectorParserTest : FunSpec({
                 }
             }
             test("Link element with no value") {
-                assertFailureMessage<IllegalArgumentException>(
+                shouldThrowWithMessage<IllegalArgumentException>(
                     "Missing link value in link element."
                 ) {
                     FeatureFlagSelectorParser.parse(
@@ -149,7 +149,7 @@ class FeatureFlagSelectorParserTest : FunSpec({
                 }
             }
             test("Link element with no value") {
-                assertFailureMessage<IllegalArgumentException>(
+                shouldThrowWithMessage<IllegalArgumentException>(
                     "Missing link value in link element."
                 ) {
                     FeatureFlagSelectorParser.parse(
@@ -158,7 +158,7 @@ class FeatureFlagSelectorParserTest : FunSpec({
                 }
             }
             test("Version element with no value") {
-                assertFailureMessage<IllegalArgumentException>(
+                shouldThrowWithMessage<IllegalArgumentException>(
                     "Missing version value in version element."
                 ) {
                     FeatureFlagSelectorParser.parse(
@@ -169,7 +169,7 @@ class FeatureFlagSelectorParserTest : FunSpec({
         }
         context("on conjunction") {
             test("with no value") {
-                assertFailureMessage<IllegalArgumentException>(
+                shouldThrowWithMessage<IllegalArgumentException>(
                     "An invalid blank element exists."
                 ) {
                     FeatureFlagSelectorParser.parse(
@@ -178,7 +178,7 @@ class FeatureFlagSelectorParserTest : FunSpec({
                 }
             }
             test("with only one sides value") {
-                assertFailureMessage<IllegalArgumentException>(
+                shouldThrowWithMessage<IllegalArgumentException>(
                     "An invalid blank element exists."
                 ) {
                     FeatureFlagSelectorParser.parse(
@@ -189,7 +189,7 @@ class FeatureFlagSelectorParserTest : FunSpec({
         }
         context("on disjunction") {
             test("with no value") {
-                assertFailureMessage<IllegalArgumentException>(
+                shouldThrowWithMessage<IllegalArgumentException>(
                     "An invalid blank element exists."
                 ) {
                     FeatureFlagSelectorParser.parse(
@@ -198,7 +198,7 @@ class FeatureFlagSelectorParserTest : FunSpec({
                 }
             }
             test("with only one sides value") {
-                assertFailureMessage<IllegalArgumentException>(
+                shouldThrowWithMessage<IllegalArgumentException>(
                     "An invalid blank element exists."
                 ) {
                     FeatureFlagSelectorParser.parse(

@@ -25,7 +25,7 @@ import com.linecorp.android.featureflag.utils.assertDisjunction
 import com.linecorp.android.featureflag.utils.conjunctionOf
 import com.linecorp.android.featureflag.utils.disjunctionOf
 import io.kotest.core.spec.style.FunSpec
-import kotlin.test.assertEquals
+import io.kotest.matchers.shouldBe
 import com.linecorp.android.featureflag.model.FeatureFlagAppliedElement as AppliedElement
 
 /**
@@ -40,7 +40,7 @@ class FeatureFlagValueOptimizerTest : FunSpec({
         if (expectedValue is Value.Links && actualValue is Value.Links) {
             assertDisjunction(expectedValue.linksDisjunction, actualValue.linksDisjunction)
         } else {
-            assertEquals(expectedValue, actualValue)
+            actualValue shouldBe expectedValue
         }
     }
 

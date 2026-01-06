@@ -18,7 +18,7 @@ package com.linecorp.android.featureflag
 
 import com.linecorp.android.featureflag.model.BuildVariant
 import io.kotest.core.spec.style.FunSpec
-import kotlin.test.assertEquals
+import io.kotest.matchers.shouldBe
 
 /**
  * Tests for [FeatureFlagPlugin].
@@ -53,7 +53,7 @@ class FeatureFlagPluginTest : FunSpec({
                     "RC" to true,
                     "RELEASE" to true
                 )
-                assertEquals(expected, plugin.getPhaseMap(phases, buildVariantOf("dev")))
+                plugin.getPhaseMap(phases, buildVariantOf("dev")) shouldBe expected
             }
             test("in BETA") {
                 val expected = mapOf(
@@ -62,7 +62,7 @@ class FeatureFlagPluginTest : FunSpec({
                     "RC" to true,
                     "RELEASE" to true
                 )
-                assertEquals(expected, plugin.getPhaseMap(phases, buildVariantOf("beta")))
+                plugin.getPhaseMap(phases, buildVariantOf("beta")) shouldBe expected
             }
             test("in RC") {
                 val expected = mapOf(
@@ -71,7 +71,7 @@ class FeatureFlagPluginTest : FunSpec({
                     "RC" to true,
                     "RELEASE" to true
                 )
-                assertEquals(expected, plugin.getPhaseMap(phases, buildVariantOf("rc")))
+                plugin.getPhaseMap(phases, buildVariantOf("rc")) shouldBe expected
             }
             test("in RELEASE") {
                 val expected = mapOf(
@@ -80,7 +80,7 @@ class FeatureFlagPluginTest : FunSpec({
                     "RC" to false,
                     "RELEASE" to true
                 )
-                assertEquals(expected, plugin.getPhaseMap(phases, buildVariantOf("release")))
+                plugin.getPhaseMap(phases, buildVariantOf("release")) shouldBe expected
             }
             test("unknown phase") {
                 val expected = mapOf(
@@ -89,7 +89,7 @@ class FeatureFlagPluginTest : FunSpec({
                     "RC" to false,
                     "RELEASE" to false
                 )
-                assertEquals(expected, plugin.getPhaseMap(phases, buildVariantOf("INVALID")))
+                plugin.getPhaseMap(phases, buildVariantOf("INVALID")) shouldBe expected
             }
         }
         context("returns correct value with flavor") {
@@ -106,10 +106,7 @@ class FeatureFlagPluginTest : FunSpec({
                     "RC" to true,
                     "RELEASE" to true
                 )
-                assertEquals(
-                    expected,
-                    plugin.getPhaseMap(phases, buildVariantOf("BUILD_TYPE", "dev"))
-                )
+                plugin.getPhaseMap(phases, buildVariantOf("BUILD_TYPE", "dev")) shouldBe expected
             }
             test("in BETA") {
                 val expected = mapOf(
@@ -118,10 +115,7 @@ class FeatureFlagPluginTest : FunSpec({
                     "RC" to true,
                     "RELEASE" to true
                 )
-                assertEquals(
-                    expected,
-                    plugin.getPhaseMap(phases, buildVariantOf("BUILD_TYPE", "beta"))
-                )
+                plugin.getPhaseMap(phases, buildVariantOf("BUILD_TYPE", "beta")) shouldBe expected
             }
             test("in RC") {
                 val expected = mapOf(
@@ -130,10 +124,7 @@ class FeatureFlagPluginTest : FunSpec({
                     "RC" to true,
                     "RELEASE" to true
                 )
-                assertEquals(
-                    expected,
-                    plugin.getPhaseMap(phases, buildVariantOf("BUILD_TYPE", "rc"))
-                )
+                plugin.getPhaseMap(phases, buildVariantOf("BUILD_TYPE", "rc")) shouldBe expected
             }
             test("in RELEASE") {
                 val expected = mapOf(
@@ -142,10 +133,10 @@ class FeatureFlagPluginTest : FunSpec({
                     "RC" to false,
                     "RELEASE" to true
                 )
-                assertEquals(
-                    expected,
-                    plugin.getPhaseMap(phases, buildVariantOf("BUILD_TYPE", "release"))
-                )
+                plugin.getPhaseMap(
+                    phases,
+                    buildVariantOf("BUILD_TYPE", "release")
+                ) shouldBe expected
             }
             test("unknown phase") {
                 val expected = mapOf(
@@ -154,10 +145,10 @@ class FeatureFlagPluginTest : FunSpec({
                     "RC" to false,
                     "RELEASE" to false
                 )
-                assertEquals(
-                    expected,
-                    plugin.getPhaseMap(phases, buildVariantOf("BUILD_TYPE", "INVALID"))
-                )
+                plugin.getPhaseMap(
+                    phases,
+                    buildVariantOf("BUILD_TYPE", "INVALID")
+                ) shouldBe expected
             }
         }
     }
