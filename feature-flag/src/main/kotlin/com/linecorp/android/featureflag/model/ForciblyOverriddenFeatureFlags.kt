@@ -43,6 +43,6 @@ internal data class ForciblyOverriddenFeatureFlags(
             )
 
         private fun Project.parseFeatureFlagInBuildParameter(parameterName: String): Set<String> =
-            properties[parameterName]?.toString()?.split(',')?.toSet() ?: emptySet()
+            providers.gradleProperty(parameterName).getOrElse("").split(',').toSet()
     }
 }
