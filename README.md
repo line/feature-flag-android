@@ -59,6 +59,7 @@ featureFlag {
         "RELEASE" to setOf(buildType("debug"), buildType("release"))
     )
     releasePhaseSet = setOf(buildType("release"))
+    versionNotation = VersionNotation.SEM_VER
 }
 ```
 
@@ -69,6 +70,9 @@ Definition of each property is as follows.
 - `phases`: A list of pairs of phase and the corresponding build variants.
 - `releasePhaseSet`: Build variants to allow using primitive boolean values as flag values. An optimizer may inline flag values with the variants. `buildType` or `flavor` can be specified as a variant.
 - `versionName`: (Optional) A version name which can override application version name.
+- `versionNotation`: (Optional) A value indicating how to interpret and compare version strings.
+    - `SEM_VER`: Using [Semantic Versioning 2.0.0](https://semver.org/).
+    - `SIMPLE`: Compare the numbers separated by dots from left to right.
 
    Also, this property can be assigned for library module since Android Gradle Plugin 7.0 or higher.
 

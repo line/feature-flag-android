@@ -71,7 +71,9 @@ class FeatureFlagFileTokenizerTest : FunSpec({
 
     context("Parsing is failed") {
         test("if a line has't key-value pair") {
-            shouldThrowWithMessage<IllegalArgumentException>("Couldn't parse a line: INVALID_LINE") {
+            shouldThrowWithMessage<IllegalArgumentException>(
+                "Couldn't parse a line: INVALID_LINE"
+            ) {
                 FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_INVALID_NO_KEY_VALUE"))
             }
         }

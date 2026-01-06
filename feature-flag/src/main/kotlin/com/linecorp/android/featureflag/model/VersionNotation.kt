@@ -24,4 +24,18 @@ enum class VersionNotation {
      * Semantic Versioning (SemVer) notation.
      */
     SEM_VER,
+
+    /**
+     * Version notation using simple dot-separated numeric values, and compare the numbers separated
+     * by dots from left to right.
+     * The number of dots must be the same for each version being compared.
+     * Generally, it must match the following regex:
+     *
+     * ```
+     * (\d+)(\.(\d+))*
+     * ```
+     *
+     * It is best to use this when the version may contain numbers starting from zero, as in CalVer.
+     */
+    SIMPLE
 }

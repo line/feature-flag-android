@@ -43,10 +43,57 @@ internal sealed interface ApplicationVersion {
         }
     }
 
+    /**
+     * An application version in simple dot-separated numeric values.
+     * See [VersionNotation.SIMPLE] for details.
+     */
+    class Simple(@VisibleForTesting internal val versionNumberList: List<Int>) :
+        ApplicationVersion,
+        Comparable<Simple> {
+
+        override fun isHigherOrEqualThan(versionString: String): Boolean =
+            this >= from(versionString)
+
+        override fun compareTo(other: Simple): Int {
+            if (other.versionNumberList.size != versionNumberList.size) {
+                throw IllegalArgumentException(
+                    "Incompatible version format: " +
+                        "${versionNumberList.joinToString(".")} and " +
+                        other.versionNumberList.joinToString(".")
+                )
+            }
+            val size = versionNumberList.size
+            for (i in 0 until size) {
+                val thisNumber = versionNumberList[i]
+                val otherNumber = other.versionNumberList[i]
+                if (thisNumber != otherNumber) {
+                    return thisNumber - otherNumber
+                }
+            }
+            return 0
+        }
+
+        companion object {
+            fun from(versionString: String): Simple {
+                if (versionString.isBlank()) {
+                    throw IllegalArgumentException("Input value is empty")
+                }
+                val versionNumberList = versionString
+                    .split(".")
+                    .map {
+                        it.toIntOrNull()?.takeIf { it >= 0 }
+                            ?: throw IllegalArgumentException("Invalid version: $versionString")
+                    }
+                return Simple(versionNumberList)
+            }
+        }
+    }
+
     companion object {
         fun from(versionString: String, versionNotation: VersionNotation): ApplicationVersion =
             when (versionNotation) {
                 VersionNotation.SEM_VER -> SemVer.from(versionString)
+                VersionNotation.SIMPLE -> Simple.from(versionString)
             }
     }
 }
