@@ -16,12 +16,13 @@
 
 package com.linecorp.android.featureflag.loader
 
-import com.github.zafarkhaja.semver.Version
+import com.linecorp.android.featureflag.model.ApplicationVersion
 import com.linecorp.android.featureflag.model.BuildEnvironment
 import com.linecorp.android.featureflag.model.DisjunctionNormalForm.Disjunction
 import com.linecorp.android.featureflag.model.FeatureFlagAppliedElement
 import com.linecorp.android.featureflag.model.FeatureFlagElement
 import com.linecorp.android.featureflag.model.FlagLink
+import com.linecorp.android.featureflag.model.VersionNotation
 import com.linecorp.android.featureflag.utils.assertDisjunction
 import com.linecorp.android.featureflag.utils.conjunctionOf
 import com.linecorp.android.featureflag.utils.disjunctionOf
@@ -42,7 +43,11 @@ class FeatureFlagSelectorEvaluatorTest : FunSpec({
         expectedDisjunction,
         FeatureFlagSelectorEvaluator.evaluate(
             disjunction,
-            BuildEnvironment(phasesMap, Version.valueOf(applicationVersion), userName)
+            BuildEnvironment(
+                phasesMap,
+                ApplicationVersion.from(applicationVersion, VersionNotation.SEM_VER),
+                userName
+            )
         )
     )
 
@@ -221,7 +226,11 @@ class FeatureFlagSelectorEvaluatorTest : FunSpec({
             shouldThrowWithMessage<IllegalArgumentException>("Unknown phase: PHASE") {
                 FeatureFlagSelectorEvaluator.evaluate(
                     disjunctionOf(conjunctionOf(FeatureFlagElement.Phase("PHASE"))),
-                    BuildEnvironment(emptyMap(), Version.valueOf("1.0.0"), "")
+                    BuildEnvironment(
+                        emptyMap(),
+                        ApplicationVersion.from("1.0.0", VersionNotation.SEM_VER),
+                        ""
+                    )
                 )
             }
         }

@@ -107,6 +107,7 @@ class FeatureFlagPlugin : Plugin<Project> {
             it.phaseMap = getPhaseMap(extension.phases, currentBuildVariant)
             it.isReleaseVariant = extension.releasePhaseSet.any(currentBuildVariant::includes)
             it.applicationVersionName = versionName
+            it.versionNotation = extension.versionNotation
             it.currentUserName = System.getProperty("user.name")
             it.forciblyOverriddenFeatureFlags = ForciblyOverriddenFeatureFlags.parse(project)
         }
