@@ -28,8 +28,6 @@ import com.linecorp.android.featureflag.model.ForciblyOverriddenFeatureFlags
 import java.util.Locale
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.kotlin.dsl.create
-import org.gradle.kotlin.dsl.register
 
 /**
  * A gradle plugin adding a task to create a feature flag Java file from a property file.
@@ -38,7 +36,11 @@ import org.gradle.kotlin.dsl.register
 class FeatureFlagPlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
-        val extension = project.extensions.create<FeatureFlagExtension>("featureFlag", project)
+        val extension = project.extensions.create(
+            "featureFlag",
+            FeatureFlagExtension::class.java,
+            project
+        )
 
         project.plugins.withType(AppPlugin::class.java) {
             project.extensions.getByType(ApplicationAndroidComponentsExtension::class.java)
@@ -99,14 +101,14 @@ class FeatureFlagPlugin : Plugin<Project> {
             if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
         }
         val taskName = "generate${capitalizedVariantName}FeatureFlag"
-        val taskProvider = project.tasks.register<FeatureFlagTask>(taskName) {
-            sourceFiles = extension.sourceFiles
-            packageName.set(packageNameProvider)
-            phaseMap = getPhaseMap(extension.phases, currentBuildVariant)
-            isReleaseVariant = extension.releasePhaseSet.any(currentBuildVariant::includes)
-            applicationVersionName = versionName
-            currentUserName = System.getProperty("user.name")
-            forciblyOverriddenFeatureFlags = ForciblyOverriddenFeatureFlags.parse(project)
+        val taskProvider = project.tasks.register(taskName, FeatureFlagTask::class.java) {
+            it.sourceFiles = extension.sourceFiles
+            it.packageName.set(packageNameProvider)
+            it.phaseMap = getPhaseMap(extension.phases, currentBuildVariant)
+            it.isReleaseVariant = extension.releasePhaseSet.any(currentBuildVariant::includes)
+            it.applicationVersionName = versionName
+            it.currentUserName = System.getProperty("user.name")
+            it.forciblyOverriddenFeatureFlags = ForciblyOverriddenFeatureFlags.parse(project)
         }
         variant.sources.java
             ?.addGeneratedSourceDirectory(taskProvider, FeatureFlagTask::outputDirectory)

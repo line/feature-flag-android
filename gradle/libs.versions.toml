@@ -3,12 +3,12 @@
 feature-flag = "3.2.0"
 
 # https://developer.android.com/studio/releases/gradle-plugin
-android-gradle = "8.9.2"
+android-gradle = "8.13.2"
 
 # Kotlin version should be fit with AGP's Kotlin version and Gradle's Kotlin version.
 # https://mvnrepository.com/artifact/com.android.tools.build/gradle
 # https://kotlinlang.org/docs/releases.html#release-details
-kotlin = "2.1.0"
+kotlin = "2.3.0"
 
 # https://github.com/JLLeitschuh/ktlint-gradle/releases
 ktlint-gradle = "12.2.0"

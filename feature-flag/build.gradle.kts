@@ -3,7 +3,6 @@ import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
-    `kotlin-dsl`
     alias(libs.plugins.gradle.publish)
     `java-gradle-plugin`
     alias(libs.plugins.ktlint.gradle)
