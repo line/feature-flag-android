@@ -26,13 +26,12 @@ import com.linecorp.android.featureflag.utils.assertDisjunction
 import com.linecorp.android.featureflag.utils.assertFailureMessage
 import com.linecorp.android.featureflag.utils.conjunctionOf
 import com.linecorp.android.featureflag.utils.disjunctionOf
-import org.spekframework.spek2.Spek
-import org.spekframework.spek2.style.specification.describe
+import io.kotest.core.spec.style.FunSpec
 
 /**
  * Tests for [FeatureFlagSelectorEvaluator].
  */
-object FeatureFlagSelectorEvaluatorTest : Spek({
+class FeatureFlagSelectorEvaluatorTest : FunSpec({
     fun assertEvaluation(
         expectedDisjunction: Disjunction<FeatureFlagAppliedElement>,
         disjunction: Disjunction<FeatureFlagElement>,
@@ -47,7 +46,7 @@ object FeatureFlagSelectorEvaluatorTest : Spek({
         )
     )
 
-    describe("Evaluated result is correct") {
+    context("Evaluated result is correct") {
         context("on each element") {
             fun assertSingleLiteralEvaluation(
                 expectedElement: FeatureFlagAppliedElement,
@@ -63,90 +62,90 @@ object FeatureFlagSelectorEvaluatorTest : Spek({
                 userName
             )
 
-            it("enabled by phase") {
+            test("enabled by phase") {
                 assertSingleLiteralEvaluation(
                     FeatureFlagAppliedElement.Constant(true),
                     FeatureFlagElement.Phase("PHASE"),
                     phasesMap = mapOf("PHASE" to true)
                 )
             }
-            it("disabled by phase") {
+            test("disabled by phase") {
                 assertSingleLiteralEvaluation(
                     FeatureFlagAppliedElement.Constant(false),
                     FeatureFlagElement.Phase("DISABLED_PHASE"),
                     phasesMap = mapOf("DISABLED_PHASE" to false)
                 )
             }
-            it("enabled by user") {
+            test("enabled by user") {
                 assertSingleLiteralEvaluation(
                     FeatureFlagAppliedElement.Constant(true),
                     FeatureFlagElement.User("USERNAME"),
                     userName = "USERNAME"
                 )
             }
-            it("disabled by user") {
+            test("disabled by user") {
                 assertSingleLiteralEvaluation(
                     FeatureFlagAppliedElement.Constant(false),
                     FeatureFlagElement.User("DISABLED_USERNAME"),
                     userName = "USERNAME"
                 )
             }
-            it("enabled by version: same version") {
+            test("enabled by version: same version") {
                 assertSingleLiteralEvaluation(
                     FeatureFlagAppliedElement.Constant(true),
                     FeatureFlagElement.Version("1.2.3"),
                     applicationVersion = "1.2.3"
                 )
             }
-            it("enabled by version: newer patch version") {
+            test("enabled by version: newer patch version") {
                 assertSingleLiteralEvaluation(
                     FeatureFlagAppliedElement.Constant(true),
                     FeatureFlagElement.Version("1.2.2"),
                     applicationVersion = "1.2.3"
                 )
             }
-            it("enabled by version: newer minor version") {
+            test("enabled by version: newer minor version") {
                 assertSingleLiteralEvaluation(
                     FeatureFlagAppliedElement.Constant(true),
                     FeatureFlagElement.Version("1.1.0"),
                     applicationVersion = "1.2.3"
                 )
             }
-            it("enabled by version: newer major version") {
+            test("enabled by version: newer major version") {
                 assertSingleLiteralEvaluation(
                     FeatureFlagAppliedElement.Constant(true),
                     FeatureFlagElement.Version("0.0.1"),
                     applicationVersion = "1.2.3"
                 )
             }
-            it("disabled by version: older patch version") {
+            test("disabled by version: older patch version") {
                 assertSingleLiteralEvaluation(
                     FeatureFlagAppliedElement.Constant(false),
                     FeatureFlagElement.Version("1.2.4"),
                     applicationVersion = "1.2.3"
                 )
             }
-            it("disabled by version: older minor version") {
+            test("disabled by version: older minor version") {
                 assertSingleLiteralEvaluation(
                     FeatureFlagAppliedElement.Constant(false),
                     FeatureFlagElement.Version("1.3.0"),
                     applicationVersion = "1.2.3"
                 )
             }
-            it("disabled by version: older major version") {
+            test("disabled by version: older major version") {
                 assertSingleLiteralEvaluation(
                     FeatureFlagAppliedElement.Constant(false),
                     FeatureFlagElement.Version("2.0.0"),
                     applicationVersion = "1.2.3"
                 )
             }
-            it("link to self module flag") {
+            test("link to self module flag") {
                 assertSingleLiteralEvaluation(
                     FeatureFlagAppliedElement.Variable(FlagLink("", "flagValue")),
                     FeatureFlagElement.Link(FlagLink("", "flagValue"))
                 )
             }
-            it("link to another module flag") {
+            test("link to another module flag") {
                 assertSingleLiteralEvaluation(
                     FeatureFlagAppliedElement.Variable(FlagLink("anotherModule", "flagValue")),
                     FeatureFlagElement.Link(FlagLink("anotherModule", "flagValue"))
@@ -155,7 +154,7 @@ object FeatureFlagSelectorEvaluatorTest : Spek({
         }
     }
 
-    describe("Model structure is same") {
+    context("Model structure is same") {
         fun assertStructureEvaluation(
             expectedDisjunction: Disjunction<FeatureFlagAppliedElement>,
             sourceDisjunction: Disjunction<FeatureFlagElement>
@@ -217,8 +216,8 @@ object FeatureFlagSelectorEvaluatorTest : Spek({
         }
     }
 
-    describe("Evaluating is failed") {
-        it("Unknown phase") {
+    context("Evaluating is failed") {
+        test("Unknown phase") {
             assertFailureMessage<IllegalArgumentException>("Unknown phase: PHASE") {
                 FeatureFlagSelectorEvaluator.evaluate(
                     disjunctionOf(conjunctionOf(FeatureFlagElement.Phase("PHASE"))),

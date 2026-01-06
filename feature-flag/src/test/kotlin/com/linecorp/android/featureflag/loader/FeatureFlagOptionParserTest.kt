@@ -21,16 +21,15 @@ import com.linecorp.android.featureflag.model.FeatureFlagOption.DEPRECATED
 import com.linecorp.android.featureflag.model.FeatureFlagOption.OVERRIDABLE
 import com.linecorp.android.featureflag.model.FeatureFlagOption.PRIVATE
 import com.linecorp.android.featureflag.utils.assertFailureMessage
+import io.kotest.core.spec.style.FunSpec
 import java.io.File
 import kotlin.test.assertEquals
-import org.spekframework.spek2.Spek
-import org.spekframework.spek2.style.specification.describe
 
 /**
  * Tests for [FeatureFlagOptionParser].
  * All the text resources are in "tests/FeatureFlagOptionParser/" directory.
  */
-object FeatureFlagOptionParserTest : Spek({
+class FeatureFlagOptionParserTest : FunSpec({
     fun loadLinesFromFile(name: String): List<String> {
         val url = checkNotNull(
             javaClass.classLoader.getResource("tests/FeatureFlagOptionParserTest/$name")
@@ -38,8 +37,8 @@ object FeatureFlagOptionParserTest : Spek({
         return File(url.toURI()).bufferedReader().lineSequence().toList()
     }
 
-    describe("Precondition") {
-        it("A reverse map of Option enum is sufficient") {
+    context("Precondition") {
+        test("A reverse map of Option enum is sufficient") {
             val actualEnums = FeatureFlagOption.values().toList()
             val reverseMapContainsEnums = FeatureFlagOptionParser.OPTION_MAPPING.values
 
@@ -49,7 +48,7 @@ object FeatureFlagOptionParserTest : Spek({
         }
     }
 
-    describe("Parsed result is correct") {
+    context("Parsed result is correct") {
         context("with normal case") {
             val expectedResults = listOf(
                 setOf(PRIVATE),
@@ -61,14 +60,14 @@ object FeatureFlagOptionParserTest : Spek({
             val testCases = loadLinesFromFile("OPTION_VALID_NORMAL")
 
             testCases.forEachIndexed { index, testValue ->
-                it(testValue) {
+                test(testValue) {
                     assertEquals(expectedResults[index], FeatureFlagOptionParser.parse(testValue))
                 }
             }
         }
 
         context("with empty") {
-            it("Empty option") {
+            test("Empty option") {
                 assertEquals(emptySet<FeatureFlagOption>(), FeatureFlagOptionParser.parse(""))
             }
         }
@@ -87,7 +86,7 @@ object FeatureFlagOptionParserTest : Spek({
             val testCases = loadLinesFromFile("OPTION_VALID_DUPLICATED")
 
             testCases.forEachIndexed { index, testValue ->
-                it(testValue) {
+                test(testValue) {
                     assertEquals(expectedResults[index], FeatureFlagOptionParser.parse(testValue))
                 }
             }
@@ -105,15 +104,15 @@ object FeatureFlagOptionParserTest : Spek({
             val testCases = loadLinesFromFile("OPTION_VALID_SPACE")
 
             testCases.forEachIndexed { index, testValue ->
-                it(""""$testValue"""") {
+                test(""""$testValue"""") {
                     assertEquals(expectedResults[index], FeatureFlagOptionParser.parse(testValue))
                 }
             }
         }
     }
 
-    describe("Parsing is failed") {
-        it("with undefined option") {
+    context("Parsing is failed") {
+        test("with undefined option") {
             assertFailureMessage<IllegalArgumentException>(
                 "A specified option is undefined: INVALID"
             ) {

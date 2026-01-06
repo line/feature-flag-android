@@ -18,16 +18,15 @@ package com.linecorp.android.featureflag.loader
 
 import com.linecorp.android.featureflag.model.FeatureFlagEntry
 import com.linecorp.android.featureflag.utils.assertFailureMessage
+import io.kotest.core.spec.style.FunSpec
 import java.io.File
 import kotlin.test.assertEquals
-import org.spekframework.spek2.Spek
-import org.spekframework.spek2.style.specification.describe
 
 /**
  * Tests for [FeatureFlagFileTokenizer].
  * All the text resources are in "tests/FeatureFlagFileTokenizerTest/" directory.
  */
-object FeatureFlagFileTokenizerTest : Spek({
+class FeatureFlagFileTokenizerTest : FunSpec({
 
     fun loadSequenceFromFile(name: String): Sequence<String> {
         val url = checkNotNull(
@@ -36,8 +35,8 @@ object FeatureFlagFileTokenizerTest : Spek({
         return File(url.toURI()).bufferedReader().lineSequence()
     }
 
-    describe("Parsed result is correct") {
-        it("with options") {
+    context("Parsed result is correct") {
+        test("with options") {
             assertEquals(
                 listOf(
                     FeatureFlagEntry("FLAG_1", "VALUE", "OPTION"),
@@ -48,7 +47,7 @@ object FeatureFlagFileTokenizerTest : Spek({
                 FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_VALID_OPTION"))
             )
         }
-        it("with name") {
+        test("with name") {
             assertEquals(
                 listOf(
                     FeatureFlagEntry("FLAG_1", "VALUE", ""),
@@ -58,7 +57,7 @@ object FeatureFlagFileTokenizerTest : Spek({
                 FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_VALID_NAME"))
             )
         }
-        it("with value") {
+        test("with value") {
             assertEquals(
                 listOf(
                     FeatureFlagEntry("FLAG_1", "VALUE", ""),
@@ -70,7 +69,7 @@ object FeatureFlagFileTokenizerTest : Spek({
                 FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_VALID_VALUE"))
             )
         }
-        it("with empty") {
+        test("with empty") {
             assertEquals(
                 emptyList(),
                 FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_VALID_EMPTY"))
@@ -78,28 +77,28 @@ object FeatureFlagFileTokenizerTest : Spek({
         }
     }
 
-    describe("Parsing is failed") {
-        it("if a line has't key-value pair") {
+    context("Parsing is failed") {
+        test("if a line has't key-value pair") {
             assertFailureMessage<IllegalArgumentException>("Couldn't parse a line: INVALID_LINE") {
                 FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_INVALID_NO_KEY_VALUE"))
             }
         }
-        it("if a key is empty") {
+        test("if a key is empty") {
             assertFailureMessage<IllegalArgumentException>("Couldn't parse a line: =VALUE") {
                 FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_INVALID_EMPTY_KEY"))
             }
         }
-        it("if a key is blank") {
+        test("if a key is blank") {
             assertFailureMessage<IllegalArgumentException>("Couldn't parse a line:  =VALUE") {
                 FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_INVALID_BLANK_KEY"))
             }
         }
-        it("if a value is empty") {
+        test("if a value is empty") {
             assertFailureMessage<IllegalArgumentException>("Couldn't parse a line: KEY=") {
                 FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_INVALID_EMPTY_VALUE"))
             }
         }
-        it("if a value is blank") {
+        test("if a value is blank") {
             assertFailureMessage<IllegalStateException>("Value mustn't be empty: KEY= ") {
                 FeatureFlagFileTokenizer.parse(loadSequenceFromFile("FLAG_INVALID_BLANK_VALUE"))
             }

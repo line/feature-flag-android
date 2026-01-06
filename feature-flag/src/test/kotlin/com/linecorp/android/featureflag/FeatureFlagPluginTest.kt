@@ -17,14 +17,13 @@
 package com.linecorp.android.featureflag
 
 import com.linecorp.android.featureflag.model.BuildVariant
+import io.kotest.core.spec.style.FunSpec
 import kotlin.test.assertEquals
-import org.spekframework.spek2.Spek
-import org.spekframework.spek2.style.specification.describe
 
 /**
  * Tests for [FeatureFlagPlugin].
  */
-object FeatureFlagPluginTest : Spek({
+class FeatureFlagPluginTest : FunSpec({
     val plugin = FeatureFlagPlugin()
 
     fun setOfBuildTypes(vararg buildTypeString: String): Set<BuildVariant.Element> =
@@ -39,7 +38,7 @@ object FeatureFlagPluginTest : Spek({
             productFlavorStrings.map { BuildVariant.Element.Flavor(it) }.toSet()
         )
 
-    describe("getPhaseMap") {
+    context("getPhaseMap") {
         context("returns correct value with buildType") {
             val phases = mapOf(
                 "DEV" to setOfBuildTypes("dev"),
@@ -47,7 +46,7 @@ object FeatureFlagPluginTest : Spek({
                 "RC" to setOfBuildTypes("rc", "beta", "dev"),
                 "RELEASE" to setOfBuildTypes("release", "rc", "beta", "dev")
             )
-            it("in DEV") {
+            test("in DEV") {
                 val expected = mapOf(
                     "DEV" to true,
                     "BETA" to true,
@@ -56,7 +55,7 @@ object FeatureFlagPluginTest : Spek({
                 )
                 assertEquals(expected, plugin.getPhaseMap(phases, buildVariantOf("dev")))
             }
-            it("in BETA") {
+            test("in BETA") {
                 val expected = mapOf(
                     "DEV" to false,
                     "BETA" to true,
@@ -65,7 +64,7 @@ object FeatureFlagPluginTest : Spek({
                 )
                 assertEquals(expected, plugin.getPhaseMap(phases, buildVariantOf("beta")))
             }
-            it("in RC") {
+            test("in RC") {
                 val expected = mapOf(
                     "DEV" to false,
                     "BETA" to false,
@@ -74,7 +73,7 @@ object FeatureFlagPluginTest : Spek({
                 )
                 assertEquals(expected, plugin.getPhaseMap(phases, buildVariantOf("rc")))
             }
-            it("in RELEASE") {
+            test("in RELEASE") {
                 val expected = mapOf(
                     "DEV" to false,
                     "BETA" to false,
@@ -83,7 +82,7 @@ object FeatureFlagPluginTest : Spek({
                 )
                 assertEquals(expected, plugin.getPhaseMap(phases, buildVariantOf("release")))
             }
-            it("unknown phase") {
+            test("unknown phase") {
                 val expected = mapOf(
                     "DEV" to false,
                     "BETA" to false,
@@ -100,7 +99,7 @@ object FeatureFlagPluginTest : Spek({
                 "RC" to setOfProductFlavors("rc", "beta", "dev"),
                 "RELEASE" to setOfProductFlavors("release", "rc", "beta", "dev")
             )
-            it("in DEV") {
+            test("in DEV") {
                 val expected = mapOf(
                     "DEV" to true,
                     "BETA" to true,
@@ -112,7 +111,7 @@ object FeatureFlagPluginTest : Spek({
                     plugin.getPhaseMap(phases, buildVariantOf("BUILD_TYPE", "dev"))
                 )
             }
-            it("in BETA") {
+            test("in BETA") {
                 val expected = mapOf(
                     "DEV" to false,
                     "BETA" to true,
@@ -124,7 +123,7 @@ object FeatureFlagPluginTest : Spek({
                     plugin.getPhaseMap(phases, buildVariantOf("BUILD_TYPE", "beta"))
                 )
             }
-            it("in RC") {
+            test("in RC") {
                 val expected = mapOf(
                     "DEV" to false,
                     "BETA" to false,
@@ -136,7 +135,7 @@ object FeatureFlagPluginTest : Spek({
                     plugin.getPhaseMap(phases, buildVariantOf("BUILD_TYPE", "rc"))
                 )
             }
-            it("in RELEASE") {
+            test("in RELEASE") {
                 val expected = mapOf(
                     "DEV" to false,
                     "BETA" to false,
@@ -148,7 +147,7 @@ object FeatureFlagPluginTest : Spek({
                     plugin.getPhaseMap(phases, buildVariantOf("BUILD_TYPE", "release"))
                 )
             }
-            it("unknown phase") {
+            test("unknown phase") {
                 val expected = mapOf(
                     "DEV" to false,
                     "BETA" to false,

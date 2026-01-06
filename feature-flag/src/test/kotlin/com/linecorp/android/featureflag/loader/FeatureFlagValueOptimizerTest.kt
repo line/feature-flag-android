@@ -24,15 +24,14 @@ import com.linecorp.android.featureflag.model.FlagLink
 import com.linecorp.android.featureflag.utils.assertDisjunction
 import com.linecorp.android.featureflag.utils.conjunctionOf
 import com.linecorp.android.featureflag.utils.disjunctionOf
+import io.kotest.core.spec.style.FunSpec
 import kotlin.test.assertEquals
-import org.spekframework.spek2.Spek
-import org.spekframework.spek2.style.specification.describe
 import com.linecorp.android.featureflag.model.FeatureFlagAppliedElement as AppliedElement
 
 /**
  * Tests for [FeatureFlagValueOptimizer].
  */
-object FeatureFlagValueOptimizerTest : Spek({
+class FeatureFlagValueOptimizerTest : FunSpec({
     fun assertOptimization(
         expectedValue: Value,
         sourceDisjunction: Disjunction<AppliedElement>
@@ -45,27 +44,27 @@ object FeatureFlagValueOptimizerTest : Spek({
         }
     }
 
-    describe("Evaluated result is correct") {
+    context("Evaluated result is correct") {
         context("only single literal") {
-            it("constant: true") {
+            test("constant: true") {
                 assertOptimization(
                     Value.True,
                     disjunctionOf(conjunctionOf(Constant(true)))
                 )
             }
-            it("constant: false") {
+            test("constant: false") {
                 assertOptimization(
                     Value.False,
                     disjunctionOf(conjunctionOf(Constant(false)))
                 )
             }
-            it("link: self module") {
+            test("link: self module") {
                 assertOptimization(
                     Value.Links(disjunctionOf(conjunctionOf(FlagLink("", "flagName")))),
                     disjunctionOf(conjunctionOf(Variable(FlagLink("", "flagName"))))
                 )
             }
-            it("link: another module") {
+            test("link: another module") {
                 assertOptimization(
                     Value.Links(
                         disjunctionOf(conjunctionOf(FlagLink("anotherModule", "flagName")))
@@ -75,25 +74,25 @@ object FeatureFlagValueOptimizerTest : Spek({
             }
         }
         context("conjunction optimization") {
-            it("true & true => true") {
+            test("true & true => true") {
                 assertOptimization(
                     Value.True,
                     disjunctionOf(conjunctionOf(Constant(true), Constant(true)))
                 )
             }
-            it("true & false => false") {
+            test("true & false => false") {
                 assertOptimization(
                     Value.False,
                     disjunctionOf(conjunctionOf(Constant(true), Constant(false)))
                 )
             }
-            it("false & false => false") {
+            test("false & false => false") {
                 assertOptimization(
                     Value.False,
                     disjunctionOf(conjunctionOf(Constant(false), Constant(false)))
                 )
             }
-            it("false & link => false") {
+            test("false & link => false") {
                 assertOptimization(
                     Value.False,
                     disjunctionOf(
@@ -104,13 +103,13 @@ object FeatureFlagValueOptimizerTest : Spek({
                     )
                 )
             }
-            it("true & link => link") {
+            test("true & link => link") {
                 assertOptimization(
                     Value.Links(disjunctionOf(conjunctionOf(FlagLink("", "flagName")))),
                     disjunctionOf(conjunctionOf(Constant(true), Variable(FlagLink("", "flagName"))))
                 )
             }
-            it("true & false & link => false") {
+            test("true & false & link => false") {
                 assertOptimization(
                     Value.False,
                     disjunctionOf(
@@ -122,7 +121,7 @@ object FeatureFlagValueOptimizerTest : Spek({
                     )
                 )
             }
-            it("link1 & link2 => link1 & link2") {
+            test("link1 & link2 => link1 & link2") {
                 assertOptimization(
                     Value.Links(
                         disjunctionOf(
@@ -142,25 +141,25 @@ object FeatureFlagValueOptimizerTest : Spek({
             }
         }
         context("disjunction optimization") {
-            it("true | true => true") {
+            test("true | true => true") {
                 assertOptimization(
                     Value.True,
                     disjunctionOf(conjunctionOf(Constant(true)), conjunctionOf(Constant(true)))
                 )
             }
-            it("true | false => true") {
+            test("true | false => true") {
                 assertOptimization(
                     Value.True,
                     disjunctionOf(conjunctionOf(Constant(true)), conjunctionOf(Constant(false)))
                 )
             }
-            it("false | false => false") {
+            test("false | false => false") {
                 assertOptimization(
                     Value.False,
                     disjunctionOf(conjunctionOf(Constant(false)), conjunctionOf(Constant(false)))
                 )
             }
-            it("false | link => link") {
+            test("false | link => link") {
                 assertOptimization(
                     Value.Links(disjunctionOf(conjunctionOf(FlagLink("", "flagName")))),
                     disjunctionOf(
@@ -169,7 +168,7 @@ object FeatureFlagValueOptimizerTest : Spek({
                     )
                 )
             }
-            it("true | link => true") {
+            test("true | link => true") {
                 assertOptimization(
                     Value.True,
                     disjunctionOf(
@@ -178,7 +177,7 @@ object FeatureFlagValueOptimizerTest : Spek({
                     )
                 )
             }
-            it("true | false | link => true") {
+            test("true | false | link => true") {
                 assertOptimization(
                     Value.True,
                     disjunctionOf(
@@ -188,7 +187,7 @@ object FeatureFlagValueOptimizerTest : Spek({
                     )
                 )
             }
-            it("link1 | link2 => link1 | link2") {
+            test("link1 | link2 => link1 | link2") {
                 assertOptimization(
                     Value.Links(
                         disjunctionOf(
