@@ -58,6 +58,7 @@ class SemVerApplicationVersionTest : FunSpec({
         test("minor version differences") {
             SemVer.from("1.2.0") shouldBeGreaterThan SemVer.from("1.1.9")
             SemVer.from("1.1.0") shouldBeLessThan SemVer.from("1.2.0")
+            SemVer.from("1.2.0") shouldBeLessThan SemVer.from("1.11.0")
         }
         test("patch version differences") {
             SemVer.from("1.2.3") shouldBeGreaterThan SemVer.from("1.2.2")

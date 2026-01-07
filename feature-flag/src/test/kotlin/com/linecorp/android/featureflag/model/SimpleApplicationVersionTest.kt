@@ -5,6 +5,7 @@ import io.kotest.assertions.throwables.shouldThrowWithMessage
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.comparables.shouldBeEqualComparingTo
 import io.kotest.matchers.comparables.shouldBeGreaterThan
+import io.kotest.matchers.comparables.shouldBeLessThan
 import io.kotest.matchers.shouldBe
 
 class SimpleApplicationVersionTest : FunSpec({
@@ -115,6 +116,7 @@ class SimpleApplicationVersionTest : FunSpec({
                 Simple.from("1.1.0") shouldBeGreaterThan Simple.from("1.0.0")
                 Simple.from("2.0.0") shouldBeGreaterThan Simple.from("1.0.0")
                 Simple.from("1.2.3.4") shouldBeGreaterThan Simple.from("0.2.3.4")
+                Simple.from("1.2.0") shouldBeLessThan Simple.from("1.11.0")
             }
             test("started by 0") {
                 Simple.from("1.02") shouldBeGreaterThan Simple.from("1.01")
