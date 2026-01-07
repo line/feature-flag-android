@@ -16,16 +16,17 @@
 
 package com.linecorp.android.featureflag
 
-import com.github.zafarkhaja.semver.Version
 import com.linecorp.android.featureflag.loader.FeatureFlagFileTokenizer
 import com.linecorp.android.featureflag.loader.FeatureFlagOptionParser
 import com.linecorp.android.featureflag.loader.FeatureFlagSelectorEvaluator
 import com.linecorp.android.featureflag.loader.FeatureFlagSelectorParser
 import com.linecorp.android.featureflag.loader.FeatureFlagValueOptimizer
+import com.linecorp.android.featureflag.model.ApplicationVersion
 import com.linecorp.android.featureflag.model.BuildEnvironment
 import com.linecorp.android.featureflag.model.FeatureFlagData
 import com.linecorp.android.featureflag.model.FeatureFlagEntry
 import com.linecorp.android.featureflag.model.ForciblyOverriddenFeatureFlags
+import com.linecorp.android.featureflag.model.VersionNotation
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.file.DirectoryProperty
@@ -74,6 +75,9 @@ abstract class FeatureFlagTask : DefaultTask() {
     internal abstract var applicationVersionName: String
 
     @get:Input
+    internal abstract var versionNotation: VersionNotation
+
+    @get:Input
     internal abstract var currentUserName: String
 
     @get:Internal
@@ -94,7 +98,7 @@ abstract class FeatureFlagTask : DefaultTask() {
         outputDirectoryFile.deleteRecursively()
         val buildEnvironment = BuildEnvironment(
             phaseMap,
-            Version.valueOf(applicationVersionName),
+            ApplicationVersion.from(applicationVersionName, versionNotation),
             currentUserName
         )
         val entries = sourceFiles

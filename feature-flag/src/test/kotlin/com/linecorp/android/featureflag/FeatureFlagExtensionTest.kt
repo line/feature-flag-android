@@ -17,39 +17,26 @@
 package com.linecorp.android.featureflag
 
 import com.linecorp.android.featureflag.model.BuildVariant
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import java.io.File
-import kotlin.test.assertEquals
 import org.gradle.api.Project
 import org.gradle.api.file.ConfigurableFileCollection
-import org.spekframework.spek2.Spek
-import org.spekframework.spek2.style.specification.describe
 
-object FeatureFlagExtensionTest : Spek({
-    describe("public functions return correct values") {
-        val mockedSourceFiles = mockk<ConfigurableFileCollection>()
-        val project: Project = mockk {
-            every { rootDir } returns File("/tmp/")
-            every { files(File("/tmp/FEATURE_FLAG")) } returns mockedSourceFiles
-        }
-        val extension by memoized {
-            FeatureFlagExtension(
-                project
-            )
-        }
+class FeatureFlagExtensionTest : FunSpec({
+    val mockedSourceFiles = mockk<ConfigurableFileCollection>()
+    val project: Project = mockk {
+        every { rootDir } returns File("/tmp/")
+        every { files(File("/tmp/FEATURE_FLAG")) } returns mockedSourceFiles
+    }
+    val extension = FeatureFlagExtension(project)
 
-        it("buildType") {
-            assertEquals(
-                BuildVariant.Element.BuildType("release"),
-                extension.buildType("release")
-            )
-        }
-        it("flavor") {
-            assertEquals(
-                BuildVariant.Element.Flavor("production"),
-                extension.flavor("production")
-            )
-        }
+    test("buildType") {
+        extension.buildType("release") shouldBe BuildVariant.Element.BuildType("release")
+    }
+    test("flavor") {
+        extension.flavor("production") shouldBe BuildVariant.Element.Flavor("production")
     }
 })

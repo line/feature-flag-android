@@ -22,18 +22,17 @@ import com.linecorp.android.featureflag.model.FeatureFlagElement.User
 import com.linecorp.android.featureflag.model.FeatureFlagElement.Version
 import com.linecorp.android.featureflag.model.FlagLink
 import com.linecorp.android.featureflag.utils.assertDisjunction
-import com.linecorp.android.featureflag.utils.assertFailureMessage
 import com.linecorp.android.featureflag.utils.conjunctionOf
 import com.linecorp.android.featureflag.utils.disjunctionOf
+import io.kotest.assertions.throwables.shouldThrowWithMessage
+import io.kotest.core.spec.style.FunSpec
 import java.io.File
-import org.spekframework.spek2.Spek
-import org.spekframework.spek2.style.specification.describe
 
 /**
  * Tests for [FeatureFlagSelectorParser].
  * All the text resources are in "tests/FeatureFlagSelectorParser/" directory.
  */
-object FeatureFlagSelectorParserTest : Spek({
+class FeatureFlagSelectorParserTest : FunSpec({
     fun loadLinesFromFile(name: String): List<String> {
         val url = checkNotNull(
             javaClass.classLoader.getResource("tests/FeatureFlagSelectorParserTest/$name")
@@ -41,7 +40,7 @@ object FeatureFlagSelectorParserTest : Spek({
         return File(url.toURI()).bufferedReader().lineSequence().toList()
     }
 
-    describe("Parsed result is correct") {
+    context("Parsed result is correct") {
         context("on each element type") {
             val expectedResults = listOf(
                 disjunctionOf(conjunctionOf(Phase("PHASE"))),
@@ -54,7 +53,7 @@ object FeatureFlagSelectorParserTest : Spek({
             val testCases = loadLinesFromFile("VALUE_VALID_ELEMENT_TYPES")
 
             testCases.forEachIndexed { index, testValue ->
-                it(testValue) {
+                test(testValue) {
                     assertDisjunction(
                         expectedResults[index],
                         FeatureFlagSelectorParser.parse(testValue)
@@ -69,7 +68,7 @@ object FeatureFlagSelectorParserTest : Spek({
             val testCases = loadLinesFromFile("VALUE_VALID_NESTED_MODULE_LINK")
 
             testCases.forEach { testValue ->
-                it(testValue) {
+                test(testValue) {
                     assertDisjunction(expected, FeatureFlagSelectorParser.parse(testValue))
                 }
             }
@@ -82,7 +81,7 @@ object FeatureFlagSelectorParserTest : Spek({
             val testCases = loadLinesFromFile("VALUE_VALID_DISJUNCTION_WITH_SPACE")
 
             testCases.forEach { testValue ->
-                it(testValue) {
+                test(testValue) {
                     assertDisjunction(expected, FeatureFlagSelectorParser.parse(testValue))
                 }
             }
@@ -94,7 +93,7 @@ object FeatureFlagSelectorParserTest : Spek({
             val testCases = loadLinesFromFile("VALUE_VALID_CONJUNCTION_WITH_SPACE")
 
             testCases.forEach { testValue ->
-                it(testValue) {
+                test(testValue) {
                     assertDisjunction(expected, FeatureFlagSelectorParser.parse(testValue))
                 }
             }
@@ -119,7 +118,7 @@ object FeatureFlagSelectorParserTest : Spek({
             val testCases = loadLinesFromFile("VALUE_VALID_DISJUNCTION_AND_CONJUNCTION")
 
             testCases.forEachIndexed { index, testValue ->
-                it(testValue) {
+                test(testValue) {
                     assertDisjunction(
                         expectedResults[index],
                         FeatureFlagSelectorParser.parse(testValue)
@@ -129,10 +128,10 @@ object FeatureFlagSelectorParserTest : Spek({
         }
     }
 
-    describe("Parsing is failed") {
+    context("Parsing is failed") {
         context("on each element type") {
-            it("User element with no value") {
-                assertFailureMessage<IllegalArgumentException>(
+            test("User element with no value") {
+                shouldThrowWithMessage<IllegalArgumentException>(
                     "Missing user name in user element."
                 ) {
                     FeatureFlagSelectorParser.parse(
@@ -140,8 +139,8 @@ object FeatureFlagSelectorParserTest : Spek({
                     )
                 }
             }
-            it("Link element with no value") {
-                assertFailureMessage<IllegalArgumentException>(
+            test("Link element with no value") {
+                shouldThrowWithMessage<IllegalArgumentException>(
                     "Missing link value in link element."
                 ) {
                     FeatureFlagSelectorParser.parse(
@@ -149,8 +148,8 @@ object FeatureFlagSelectorParserTest : Spek({
                     )
                 }
             }
-            it("Link element with no value") {
-                assertFailureMessage<IllegalArgumentException>(
+            test("Link element with no value") {
+                shouldThrowWithMessage<IllegalArgumentException>(
                     "Missing link value in link element."
                 ) {
                     FeatureFlagSelectorParser.parse(
@@ -158,8 +157,8 @@ object FeatureFlagSelectorParserTest : Spek({
                     )
                 }
             }
-            it("Version element with no value") {
-                assertFailureMessage<IllegalArgumentException>(
+            test("Version element with no value") {
+                shouldThrowWithMessage<IllegalArgumentException>(
                     "Missing version value in version element."
                 ) {
                     FeatureFlagSelectorParser.parse(
@@ -169,8 +168,8 @@ object FeatureFlagSelectorParserTest : Spek({
             }
         }
         context("on conjunction") {
-            it("with no value") {
-                assertFailureMessage<IllegalArgumentException>(
+            test("with no value") {
+                shouldThrowWithMessage<IllegalArgumentException>(
                     "An invalid blank element exists."
                 ) {
                     FeatureFlagSelectorParser.parse(
@@ -178,8 +177,8 @@ object FeatureFlagSelectorParserTest : Spek({
                     )
                 }
             }
-            it("with only one sides value") {
-                assertFailureMessage<IllegalArgumentException>(
+            test("with only one sides value") {
+                shouldThrowWithMessage<IllegalArgumentException>(
                     "An invalid blank element exists."
                 ) {
                     FeatureFlagSelectorParser.parse(
@@ -189,8 +188,8 @@ object FeatureFlagSelectorParserTest : Spek({
             }
         }
         context("on disjunction") {
-            it("with no value") {
-                assertFailureMessage<IllegalArgumentException>(
+            test("with no value") {
+                shouldThrowWithMessage<IllegalArgumentException>(
                     "An invalid blank element exists."
                 ) {
                     FeatureFlagSelectorParser.parse(
@@ -198,8 +197,8 @@ object FeatureFlagSelectorParserTest : Spek({
                     )
                 }
             }
-            it("with only one sides value") {
-                assertFailureMessage<IllegalArgumentException>(
+            test("with only one sides value") {
+                shouldThrowWithMessage<IllegalArgumentException>(
                     "An invalid blank element exists."
                 ) {
                     FeatureFlagSelectorParser.parse(

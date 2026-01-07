@@ -17,14 +17,13 @@
 package com.linecorp.android.featureflag
 
 import com.linecorp.android.featureflag.model.BuildVariant
-import kotlin.test.assertEquals
-import org.spekframework.spek2.Spek
-import org.spekframework.spek2.style.specification.describe
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 
 /**
  * Tests for [FeatureFlagPlugin].
  */
-object FeatureFlagPluginTest : Spek({
+class FeatureFlagPluginTest : FunSpec({
     val plugin = FeatureFlagPlugin()
 
     fun setOfBuildTypes(vararg buildTypeString: String): Set<BuildVariant.Element> =
@@ -39,7 +38,7 @@ object FeatureFlagPluginTest : Spek({
             productFlavorStrings.map { BuildVariant.Element.Flavor(it) }.toSet()
         )
 
-    describe("getPhaseMap") {
+    context("getPhaseMap") {
         context("returns correct value with buildType") {
             val phases = mapOf(
                 "DEV" to setOfBuildTypes("dev"),
@@ -47,50 +46,50 @@ object FeatureFlagPluginTest : Spek({
                 "RC" to setOfBuildTypes("rc", "beta", "dev"),
                 "RELEASE" to setOfBuildTypes("release", "rc", "beta", "dev")
             )
-            it("in DEV") {
+            test("in DEV") {
                 val expected = mapOf(
                     "DEV" to true,
                     "BETA" to true,
                     "RC" to true,
                     "RELEASE" to true
                 )
-                assertEquals(expected, plugin.getPhaseMap(phases, buildVariantOf("dev")))
+                plugin.getPhaseMap(phases, buildVariantOf("dev")) shouldBe expected
             }
-            it("in BETA") {
+            test("in BETA") {
                 val expected = mapOf(
                     "DEV" to false,
                     "BETA" to true,
                     "RC" to true,
                     "RELEASE" to true
                 )
-                assertEquals(expected, plugin.getPhaseMap(phases, buildVariantOf("beta")))
+                plugin.getPhaseMap(phases, buildVariantOf("beta")) shouldBe expected
             }
-            it("in RC") {
+            test("in RC") {
                 val expected = mapOf(
                     "DEV" to false,
                     "BETA" to false,
                     "RC" to true,
                     "RELEASE" to true
                 )
-                assertEquals(expected, plugin.getPhaseMap(phases, buildVariantOf("rc")))
+                plugin.getPhaseMap(phases, buildVariantOf("rc")) shouldBe expected
             }
-            it("in RELEASE") {
+            test("in RELEASE") {
                 val expected = mapOf(
                     "DEV" to false,
                     "BETA" to false,
                     "RC" to false,
                     "RELEASE" to true
                 )
-                assertEquals(expected, plugin.getPhaseMap(phases, buildVariantOf("release")))
+                plugin.getPhaseMap(phases, buildVariantOf("release")) shouldBe expected
             }
-            it("unknown phase") {
+            test("unknown phase") {
                 val expected = mapOf(
                     "DEV" to false,
                     "BETA" to false,
                     "RC" to false,
                     "RELEASE" to false
                 )
-                assertEquals(expected, plugin.getPhaseMap(phases, buildVariantOf("INVALID")))
+                plugin.getPhaseMap(phases, buildVariantOf("INVALID")) shouldBe expected
             }
         }
         context("returns correct value with flavor") {
@@ -100,65 +99,56 @@ object FeatureFlagPluginTest : Spek({
                 "RC" to setOfProductFlavors("rc", "beta", "dev"),
                 "RELEASE" to setOfProductFlavors("release", "rc", "beta", "dev")
             )
-            it("in DEV") {
+            test("in DEV") {
                 val expected = mapOf(
                     "DEV" to true,
                     "BETA" to true,
                     "RC" to true,
                     "RELEASE" to true
                 )
-                assertEquals(
-                    expected,
-                    plugin.getPhaseMap(phases, buildVariantOf("BUILD_TYPE", "dev"))
-                )
+                plugin.getPhaseMap(phases, buildVariantOf("BUILD_TYPE", "dev")) shouldBe expected
             }
-            it("in BETA") {
+            test("in BETA") {
                 val expected = mapOf(
                     "DEV" to false,
                     "BETA" to true,
                     "RC" to true,
                     "RELEASE" to true
                 )
-                assertEquals(
-                    expected,
-                    plugin.getPhaseMap(phases, buildVariantOf("BUILD_TYPE", "beta"))
-                )
+                plugin.getPhaseMap(phases, buildVariantOf("BUILD_TYPE", "beta")) shouldBe expected
             }
-            it("in RC") {
+            test("in RC") {
                 val expected = mapOf(
                     "DEV" to false,
                     "BETA" to false,
                     "RC" to true,
                     "RELEASE" to true
                 )
-                assertEquals(
-                    expected,
-                    plugin.getPhaseMap(phases, buildVariantOf("BUILD_TYPE", "rc"))
-                )
+                plugin.getPhaseMap(phases, buildVariantOf("BUILD_TYPE", "rc")) shouldBe expected
             }
-            it("in RELEASE") {
+            test("in RELEASE") {
                 val expected = mapOf(
                     "DEV" to false,
                     "BETA" to false,
                     "RC" to false,
                     "RELEASE" to true
                 )
-                assertEquals(
-                    expected,
-                    plugin.getPhaseMap(phases, buildVariantOf("BUILD_TYPE", "release"))
-                )
+                plugin.getPhaseMap(
+                    phases,
+                    buildVariantOf("BUILD_TYPE", "release")
+                ) shouldBe expected
             }
-            it("unknown phase") {
+            test("unknown phase") {
                 val expected = mapOf(
                     "DEV" to false,
                     "BETA" to false,
                     "RC" to false,
                     "RELEASE" to false
                 )
-                assertEquals(
-                    expected,
-                    plugin.getPhaseMap(phases, buildVariantOf("BUILD_TYPE", "INVALID"))
-                )
+                plugin.getPhaseMap(
+                    phases,
+                    buildVariantOf("BUILD_TYPE", "INVALID")
+                ) shouldBe expected
             }
         }
     }

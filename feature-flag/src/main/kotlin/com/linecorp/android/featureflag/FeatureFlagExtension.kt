@@ -17,6 +17,7 @@
 package com.linecorp.android.featureflag
 
 import com.linecorp.android.featureflag.model.BuildVariant
+import com.linecorp.android.featureflag.model.VersionNotation
 import org.gradle.api.Project
 import org.gradle.api.file.ConfigurableFileCollection
 
@@ -32,6 +33,7 @@ open class FeatureFlagExtension(project: Project) {
     var releasePhaseSet: Set<BuildVariant.Element> = setOf()
     var packageName: String = ""
     var versionName: String = ""
+    var versionNotation: VersionNotation = VersionNotation.SEM_VER
 
     fun buildType(name: String): BuildVariant.Element = BuildVariant.Element.BuildType(name)
 

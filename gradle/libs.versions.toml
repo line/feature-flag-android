@@ -3,12 +3,12 @@
 feature-flag = "3.2.0"
 
 # https://developer.android.com/studio/releases/gradle-plugin
-android-gradle = "8.9.2"
+android-gradle = "8.13.2"
 
 # Kotlin version should be fit with AGP's Kotlin version and Gradle's Kotlin version.
 # https://mvnrepository.com/artifact/com.android.tools.build/gradle
 # https://kotlinlang.org/docs/releases.html#release-details
-kotlin = "2.1.0"
+kotlin = "2.3.0"
 
 # https://github.com/JLLeitschuh/ktlint-gradle/releases
 ktlint-gradle = "12.2.0"
@@ -22,8 +22,8 @@ ben-manes-gradle = "0.52.0"
 # https://plugins.gradle.org/plugin/com.gradle.plugin-publish
 gradle-publish = "1.3.1"
 
-# https://github.com/spekframework/spek/releases
-spek = "2.0.19"
+# https://github.com/kotest/kotest/releases
+kotest = "6.0.7"
 
 # https://github.com/mockk/mockk/releases
 mockk = "1.14.0"
@@ -39,8 +39,9 @@ kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref =
 
 jsemver = { module = "com.github.zafarkhaja:java-semver", version.ref = "jsemver" }
 
-spek2-dsl-jvm = { module = "org.spekframework.spek2:spek-dsl-jvm", version.ref = "spek" }
-spek2-runner-junit5 = { module = "org.spekframework.spek2:spek-runner-junit5", version.ref = "spek" }
+kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+kotest-framework-engine = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }
+kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 

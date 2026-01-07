@@ -1,9 +1,10 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
+    `java-library`
     alias(libs.plugins.kotlin.jvm)
-    `kotlin-dsl`
     alias(libs.plugins.gradle.publish)
     `java-gradle-plugin`
     alias(libs.plugins.ktlint.gradle)
@@ -28,6 +29,17 @@ gradlePlugin {
     }
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
 ktlint {
     reporters {
         reporter(ReporterType.PLAIN)
@@ -36,9 +48,7 @@ ktlint {
 }
 
 tasks.withType(Test::class.java) {
-    useJUnitPlatform {
-        includeEngines("spek2")
-    }
+    useJUnitPlatform()
 }
 
 fun isStable(version: String): Boolean {
@@ -60,9 +70,10 @@ dependencies {
 
     testImplementation(libs.kotlin.test)
     testImplementation(libs.mockk)
-    testImplementation(libs.spek2.dsl.jvm)
+    testImplementation(libs.kotest.runner.junit5)
+    testImplementation(libs.kotest.framework.engine)
+    testImplementation(libs.kotest.assertions.core)
     testRuntimeOnly(libs.kotlin.reflect)
-    testRuntimeOnly(libs.spek2.runner.junit5)
 }
 
 publishing {

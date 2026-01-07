@@ -16,7 +16,6 @@
 
 package com.linecorp.android.featureflag.loader
 
-import com.github.zafarkhaja.semver.Version
 import com.linecorp.android.featureflag.loader.FeatureFlagSelectorEvaluator.evaluate
 import com.linecorp.android.featureflag.model.BuildEnvironment
 import com.linecorp.android.featureflag.model.DisjunctionNormalForm.Conjunction
@@ -81,9 +80,8 @@ internal object FeatureFlagSelectorEvaluator {
         is FeatureFlagElement.Phase -> Constant(isEnabledPhase(element, buildEnvironment.phasesMap))
         is FeatureFlagElement.User -> Constant(isEnabledUser(element, buildEnvironment.userName))
         is FeatureFlagElement.Link -> Variable(element.link)
-        is FeatureFlagElement.Version -> Constant(
-            isEnabledVersion(element, buildEnvironment.applicationVersion)
-        )
+        is FeatureFlagElement.Version ->
+            Constant(buildEnvironment.applicationVersion.isHigherOrEqualThan(element.version))
     }
 
     private fun isEnabledPhase(
@@ -95,9 +93,4 @@ internal object FeatureFlagSelectorEvaluator {
         element: FeatureFlagElement.User,
         userName: String
     ): Boolean = element.name == userName
-
-    private fun isEnabledVersion(
-        element: FeatureFlagElement.Version,
-        applicationVersion: Version
-    ): Boolean = Version.valueOf(element.version) <= applicationVersion
 }
