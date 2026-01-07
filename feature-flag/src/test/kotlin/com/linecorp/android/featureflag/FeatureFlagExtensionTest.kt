@@ -37,6 +37,6 @@ class FeatureFlagExtensionTest : FunSpec({
         extension.buildType("release") shouldBe BuildVariant.Element.BuildType("release")
     }
     test("flavor") {
-        extension.flavor("release") shouldBe BuildVariant.Element.Flavor("release")
+        extension.flavor("production") shouldBe BuildVariant.Element.Flavor("production")
     }
 })
